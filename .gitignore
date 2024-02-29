@@ -31,9 +31,7 @@ build/
 ### VS Code ###
 .vscode/
 
-mvnw
-mvnw.cmd
-.mvn/wrapper/*
+
 src/main/resources/application.properties
 out/*
 
