@@ -1,0 +1,23 @@
+version: "3"
+services:
+#  java:
+#    build:
+#      dockerfile: docker/java/java.dockerfile
+#      context: .
+#    volumes:
+#      - ./src:/app/src:rw,cached
+#    ports:
+#      - 4000:4000
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-main}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+    volumes:
+      - java-db:/var/lib/mysql
+volumes:
+  java-db:
