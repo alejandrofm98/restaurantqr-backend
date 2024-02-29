@@ -36,3 +36,6 @@ mvnw.cmd
 .mvn/wrapper/*
 src/main/resources/application.properties
 out/*
+
+.env
+.env.local
