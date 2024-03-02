@@ -17,6 +17,7 @@ public class AuthControllerPublic {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private AuthService authService;
 
     @PostMapping(value ="login")
