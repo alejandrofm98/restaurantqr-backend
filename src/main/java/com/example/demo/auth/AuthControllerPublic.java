@@ -1,13 +1,12 @@
 package com.example.demo.auth;
 
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.request.LoginRequest;
+import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")

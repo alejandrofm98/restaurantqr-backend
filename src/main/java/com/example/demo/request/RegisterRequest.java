@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.example.demo.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +15,5 @@ public class RegisterRequest {
     String email;
     String username;
     String password;
-    String rol;
+    Integer rol;
 }

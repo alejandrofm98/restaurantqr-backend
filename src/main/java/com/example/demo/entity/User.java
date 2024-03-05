@@ -1,4 +1,5 @@
-package com.example.demo.user;
+package com.example.demo.entity;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,11 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+
 
 @Data
 @Builder
@@ -28,13 +30,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     String username;
     String password;
-    @Enumerated(EnumType.STRING)
-    Role rol;
+
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(rol.name()));
+        return Collections.emptyList();
     }
 
 
