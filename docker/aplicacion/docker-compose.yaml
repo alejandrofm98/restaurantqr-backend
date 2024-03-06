@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-main}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+    ports:
+      - '3306:3306'    
+    expose:
+      - '3306'
+    volumes:
+      - java-db:/var/lib/mysql
+    
+  java:
+      image: java
+      build:
+        dockerfile: dockerfile
+      volumes:
+        - /home/opc/desplegar/restaurantqr:/app
+#      - "C:/pruebas/restaurantqr:/app"
+      ports:
+        - "8080:8080"
+      depends_on: 
+        - db
+volumes:
+  java-db:
+
