@@ -1,12 +1,11 @@
 package com.example.demo.auth;
 
-import com.example.demo.exception.Exceptions;
-import com.example.demo.entity.Usuario_rol;
-import com.example.demo.jwt.JwtService;
-import com.example.demo.repository.RolRepository;
-import com.example.demo.repository.Usuario_rolRepository;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UsuarioRol;
+import com.example.demo.exception.Exceptions;
+import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.UsuarioRolRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final Usuario_rolRepository usuario_rolRepository;
-    private final RolRepository rolRepository;
+    private final UsuarioRolRepository usuarioRolRepository;
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
@@ -50,9 +48,9 @@ public class AuthService {
 
         userRepository.save(user);
 
-        Usuario_rol rol = Usuario_rol.builder().id_usuario(user.getId()).id_rol(request.getRol()).build();
+        UsuarioRol rol = UsuarioRol.builder().idUsuario(user.getId()).idRol(request.getRol()).build();
 
-        usuario_rolRepository.save(rol);
+        usuarioRolRepository.save(rol);
 
         return AuthResponse.builder().token(jwtService.getToken(user)).build();
     }

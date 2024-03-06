@@ -1,12 +1,13 @@
 package com.example.demo.auth;
 
-import com.example.demo.repository.UserRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -14,10 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthControllerPublic {
 
 
-    @Autowired
-    private final UserRepository userRepository;
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
 
     @PostMapping(value ="login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
