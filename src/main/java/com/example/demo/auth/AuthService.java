@@ -1,6 +1,6 @@
 package com.example.demo.auth;
 
-import com.example.demo.exceptions.Exceptions;
+import com.example.demo.exception.Exceptions;
 import com.example.demo.entity.Usuario_rol;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.RolRepository;
