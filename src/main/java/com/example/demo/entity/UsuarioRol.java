@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name ="usuario_rol")
-public class Usuario_rol {
+public class UsuarioRol {
     @Id
-    Integer id_usuario;
-    Integer id_rol;
+    Integer idUsuario;
+    Integer idRol;
 }
