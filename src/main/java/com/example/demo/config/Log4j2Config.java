@@ -25,4 +25,11 @@ public class Log4j2Config {
     }
 
 
+
+    public static void logRequestError(String message) {
+        log.info("--------------Inicio--------------------");
+        log.error(message);
+    }
+
+
 }

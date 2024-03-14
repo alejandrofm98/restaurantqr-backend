@@ -5,6 +5,7 @@ import com.example.demo.config.Log4j2Config;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,23 +26,36 @@ public class AuthControllerPublic {
 
     @PostMapping(value ="login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
-        AuthResponse authResponse = authService.login(request);
-
-        Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL+CONSTANT_LOGIN_URL+"/login", CONSTANT_URL,
-                authResponse.token,request.toString());
-        return ResponseEntity.ok(authResponse);
+        try {
+            AuthResponse authResponse = authService.login(request);
+            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL + CONSTANT_LOGIN_URL + "/login", CONSTANT_URL,
+                    authResponse.getToken(),
+                    request.toString()
+            );
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            Log4j2Config.logRequestError("Se ha producido un error en el inicio de sesión: "+e.getMessage());
+            // Devolución de respuesta JSON genérica
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse(true));
+        }
 
     }
 
     @PostMapping(value ="register")
         public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        AuthResponse authResponse = authService.register(request);
-
-        Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL+CONSTANT_LOGIN_URL+"/register", CONSTANT_URL,
-                authResponse.getToken(),
-                request.toString()
-        );
-        return ResponseEntity.ok(authResponse);
+        AuthResponse authResponse;
+        try {
+            authResponse = authService.register(request);
+            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL + CONSTANT_LOGIN_URL + "/register", CONSTANT_URL,
+                    authResponse.getToken(),
+                    request.toString()
+            );
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            Log4j2Config.logRequestError(e.getMessage());
+            // Devolución de respuesta JSON genérica
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse(true));
+        }
 
     }
 
