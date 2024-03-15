@@ -1,5 +1,6 @@
 package com.example.demo.auth;
 
+import com.example.demo.config.ErrorConfig;
 import com.example.demo.config.FilterConfig;
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.request.LoginRequest;
@@ -25,36 +26,38 @@ public class AuthControllerPublic {
     private final FilterConfig filter = new FilterConfig();
 
     @PostMapping(value ="login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             AuthResponse authResponse = authService.login(request);
-            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL + CONSTANT_LOGIN_URL + "/login", CONSTANT_URL,
+            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
                     authResponse.getToken(),
                     request.toString()
             );
             return ResponseEntity.ok(authResponse);
         } catch (Exception e) {
-            Log4j2Config.logRequestError("Se ha producido un error en el inicio de sesión: "+e.getMessage());
-            // Devolución de respuesta JSON genérica
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse(true));
+            Log4j2Config.logRequestError(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
+                    request.toString(), e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorConfig(true, e.getMessage()));
         }
 
     }
 
     @PostMapping(value ="register")
-        public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         AuthResponse authResponse;
         try {
             authResponse = authService.register(request);
-            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_URL + CONSTANT_LOGIN_URL + "/register", CONSTANT_URL,
+            Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_LOGIN_URL + "/register",
                     authResponse.getToken(),
                     request.toString()
             );
             return ResponseEntity.ok(authResponse);
         } catch (Exception e) {
-            Log4j2Config.logRequestError(e.getMessage());
-            // Devolución de respuesta JSON genérica
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse(true));
+            Log4j2Config.logRequestError(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
+                    request.toString(),e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorConfig(true, e.getMessage()));
         }
 
     }
