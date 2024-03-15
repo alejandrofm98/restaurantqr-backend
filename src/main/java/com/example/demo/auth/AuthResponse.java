@@ -11,12 +11,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthResponse {
     String token;
-    private boolean error;
-
-    public AuthResponse(boolean error) {
-        this.error = error;
-    }
-
-
-
 }

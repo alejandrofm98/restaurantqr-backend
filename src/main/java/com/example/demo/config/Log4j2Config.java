@@ -11,17 +11,12 @@ public class Log4j2Config {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static void logRequestInfo(String tipoPeticion, String endpoint, String origen,
-                                      String respuestaEnviada, String datosRecibidos) {
+    public static void logRequestInfo(String method, String endpoint,
+                                      String response, String request) {
         LocalDateTime now = LocalDateTime.now();
-
         log.info("--------------Inicio--------------------");
-        log.info("Fecha: {}", now.format(formatter));
-        log.info("Tipo petición: {}", tipoPeticion);
-        log.info("Endpoint: {}", endpoint);
-        log.info("Origen: {}", origen);
-        log.info("Respuesta enviada: {}", respuestaEnviada);
-        log.info("Datos recibidos en la petición: {}", datosRecibidos);
+        log.info("[ENDPOINT]"+endpoint+"[/ENDPOINT]"+"[METHOD]"+method+"[/METHOD]"+"[DATE]"+now.format(formatter)+
+                "[/DATE]"+"[REQUEST]"+request+"[/REQUEST]"+"[RESPONSE]"+response+"[/RESPONSE]");
     }
 
 
@@ -29,6 +24,18 @@ public class Log4j2Config {
     public static void logRequestError(String message) {
         log.info("--------------Inicio--------------------");
         log.error(message);
+    }
+
+
+    public static void logRequestError(String method, String endpoint,
+                                       String request,
+                                       String errorDescription) {
+        LocalDateTime now = LocalDateTime.now();
+        boolean error = true;
+        log.info("--------------Inicio--------------------");
+        log.error("[ENDPOINT]"+endpoint+"[/ENDPOINT]"+"[METHOD]"+method+"[/METHOD]"+"[DATE]"+now.format(formatter)+
+                "[/DATE]"+"[REQUEST]"+request+"[/REQUEST]"
+        +"[ERROR]"+error+"[/ERROR]"+"[ERRORDESCRIPTION]"+errorDescription+"[/ERRORDESCRIPTION]");
     }
 
 
