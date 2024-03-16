@@ -10,7 +10,7 @@
   <groupId>com.example</groupId>
   <artifactId>demo</artifactId>
 <!--  Prueba versiones-->
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
   <name>demo</name>
   <description>Demo project for Spring Boot</description>
@@ -19,7 +19,7 @@
 		<connection>scm:git:git@github.com:alejandrofm98/restaurantqr-backend.git</connection>
 		<url>https://github.com/alejandrofm98/restaurantqr-backend</url>
 		<developerConnection>scm:git:git@github.com:alejandrofm98/restaurantqr-backend.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>demo-0.0.5</tag>
   </scm>
 
   <properties>
