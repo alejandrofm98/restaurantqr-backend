@@ -15,9 +15,9 @@
   <description>Demo project for Spring Boot</description>
 
 	<scm>
-		<connection>scm:git:https://github.com/alejandrofm98/restaurantqr-backend.git</connection>
+		<connection>scm:git:git@github.com:alejandrofm98/restaurantqr-backend.git</connection>
 		<url>https://github.com/alejandrofm98/restaurantqr-backend</url>
-		<developerConnection>scm:git:https://github.com/alejandrofm98/restaurantqr-backend.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:alejandrofm98/restaurantqr-backend.git</developerConnection>
 	  <tag>HEAD</tag>
   </scm>
 
