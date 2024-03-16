@@ -27,39 +27,23 @@ public class AuthControllerPublic {
 
     @PostMapping(value ="login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        try {
             AuthResponse authResponse = authService.login(request);
             Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
                     authResponse.getToken(),
                     request.toString()
             );
             return ResponseEntity.ok(authResponse);
-        } catch (Exception e) {
-            Log4j2Config.logRequestError(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
-                    request.toString(), e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorConfig(true, e.getMessage()));
-        }
-
     }
 
     @PostMapping(value ="register")
         public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         AuthResponse authResponse;
-        try {
             authResponse = authService.register(request);
             Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_LOGIN_URL + "/register",
                     authResponse.getToken(),
                     request.toString()
             );
             return ResponseEntity.ok(authResponse);
-        } catch (Exception e) {
-            Log4j2Config.logRequestError(CONSTANT_POST, CONSTANT_LOGIN_URL + "/login",
-                    request.toString(),e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorConfig(true, e.getMessage()));
-        }
-
     }
 
 

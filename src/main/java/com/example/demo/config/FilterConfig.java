@@ -1,12 +1,17 @@
 package com.example.demo.config;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -16,19 +21,56 @@ import java.time.Instant;
 public class FilterConfig implements Filter {
 
 
-
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         Instant start = Instant.now();
+        String methodName = "doFilter";
+        String requestBody = "";
+        if (req instanceof HttpServletRequest httpServletRequest) {
+            methodName = ((HttpServletRequest) req).getMethod();
+            if ("POST".equalsIgnoreCase(methodName) || "PUT".equalsIgnoreCase(methodName)) {
+                requestBody = extractRequestBody(httpServletRequest);
+            }
+        }
         try {
-            chain.doFilter(req, resp);
+            assert req instanceof HttpServletRequest;
+            chain.doFilter(new CachedBodyHttpServletRequestConfig((HttpServletRequest) req, requestBody), resp);
+        } catch (IOException | ServletException ex) {
+            String errorMessage = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            String stackTraceAsString = sw.toString();
+            Log4j2Config.logRequestError(methodName, ((HttpServletRequest) req).getRequestURI(), requestBody, stackTraceAsString);
+            ErrorConfig errorConfig = new ErrorConfig(true, errorMessage);
+            HttpServletResponse httpResponse = (HttpServletResponse) resp;
+            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            httpResponse.setContentType("application/json");
+            httpResponse.getWriter().write(new Gson().toJson(errorConfig));
         } finally {
             Instant finish = Instant.now();
             long time = Duration.between(start, finish).toMillis();
-            log.info("{}: {} ms ", ((HttpServletRequest) req).getRequestURI(),  time);
+            log.info("ms:"+ time);
             log.info("--------------FIN-----------------------");
         }
+
+    }
+
+
+    private String extractRequestBody(HttpServletRequest request) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = request.getReader()) {
+            char[] charBuffer = new char[128];
+            int bytesRead;
+            while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
+                stringBuilder.append(charBuffer, 0, bytesRead);
+            }
+        }
+        // Eliminar saltos de línea y espacios en blanco innecesarios
+        return stringBuilder.toString().replaceAll("\\s+", "");
     }
 
 
 }
+
+
