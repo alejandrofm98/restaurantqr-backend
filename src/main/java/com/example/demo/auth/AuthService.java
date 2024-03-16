@@ -9,6 +9,7 @@ import com.example.demo.repository.UsuarioRolRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -35,7 +37,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new Exceptions("El nombre de usuario ya está en uso.");
+            throw new Exceptions("The user name is already in use.");
         }
         User user = User.builder().username(request.getUsername())
                 .name(request.getName())

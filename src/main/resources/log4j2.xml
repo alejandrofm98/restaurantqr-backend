@@ -10,28 +10,28 @@
   <Appenders>
 
     <RollingFile name="fileLogger"
-      fileName="D:/IdeaProjects/restaurantqr-backend/data/logs/RestaurantQR.log"
-      filePattern="D:/IdeaProjects/restaurantqr-backend/data/logs/RestaurantQR-%d{yyyy-MM-dd}.log.gz">
+                 fileName="logs/RestaurantQR.log"
+                 filePattern="logs/RestaurantQR-%d{yyyy-MM-dd}.log.gz">
       <PatternLayout
-        pattern="[RestaurantQR] %d [%t] %-5p %c{2}:%L %x - %m%n"/>
+              pattern="[RestaurantQR] %d [%t] %-5p %c{2}:%L %x - %m%n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10MB"/>
         <TimeBasedTriggeringPolicy interval="1"
-          modulate="true"/>
+                                   modulate="true"/>
       </Policies>
       <DefaultRolloverStrategy max="5"/>
     </RollingFile>
 
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout
-        pattern="&lt;servapp_out&gt;%d{yyyy-MM-dd HH:mm:ss,SSS ZZZ} | %p | %c | %m&lt;/finmensaje&gt;%n"/>
+              pattern="[RestaurantQR] %d [%t] %-5p %c{2}:%L %x - %m%n"/>
     </Console>
   </Appenders>
 
   <Loggers>
     <Root level="INFO" additivity="false">
       <appender-ref ref="fileLogger"/>
-      <appender-ref ref="consoleLogger"/>
+      <appender-ref ref="Console"/>
     </Root>
   </Loggers>
 
