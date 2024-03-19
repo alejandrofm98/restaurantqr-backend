@@ -23,8 +23,6 @@ public class AuthControllerPublic {
 
     private final AuthService authService;
 
-    private final FilterConfig filter = new FilterConfig();
-
     @PostMapping(value ="login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
             AuthResponse authResponse = authService.login(request);
