@@ -14,4 +14,5 @@ public class AuthControllerPrivate {
             return "Welcome from secure endpoint";
 
     }
+
 }
