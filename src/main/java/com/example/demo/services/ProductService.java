@@ -133,22 +133,24 @@ public class ProductService {
 
 
 
+    public Product deleteProductAndImage(Integer id) throws IOException {
+        // Buscar el producto por ID
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 
-        public void deleteProductAndImage(Integer id) throws IOException {
-            // Buscar el producto por ID
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
-
-            // Eliminar la imagen del disco
-            String imagePath = product.getImage();
-            if (imagePath != null) {
-                Path path = Paths.get(imagePath);
-                Files.deleteIfExists(path);
-            }
-
-            // Eliminar el producto de la base de datos
-            productRepository.deleteById(id);
+        // Eliminar la imagen del disco
+        String imagePath = product.getImage();
+        if (imagePath != null) {
+            Path path = Paths.get(imagePath);
+            Files.deleteIfExists(path);
         }
+
+        // Eliminar el producto de la base de datos
+        productRepository.deleteById(id);
+
+        // Devolver el producto eliminado
+        return product;
+    }
 
 
 
