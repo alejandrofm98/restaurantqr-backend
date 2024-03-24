@@ -34,6 +34,7 @@ build/
 logs/*
 src/main/resources/application.properties
 out/*
+images/*
 
 .env
 .env.local
