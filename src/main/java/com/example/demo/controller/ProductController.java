@@ -31,9 +31,9 @@ public class ProductController {
         Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, idempresa);
         Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
                 "Successfully inserted product",
-                uploadedProduct.toString()
-        );
-        return productService.uploadImage(file, name, description, price, category, status, idempresa);
+                uploadedProduct.toString());
+
+        return uploadedProduct;
     }
 
     //Updatear productos + foto

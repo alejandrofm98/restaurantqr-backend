@@ -43,7 +43,7 @@ public class ProductService {
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
             String directory = "images";
-            String imagePath = directory + "\\" + newFileName; // Ruta de la imagen
+            String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
             Path directoryPath = Paths.get(directory);
@@ -84,7 +84,7 @@ public class ProductService {
                 String extension = getFileExtension(originalFileName);
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
                     String directory = "images";
-                    String imagePath = directory + "\\" + newFileName; // Ruta de la nueva imagen
+                    String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
                     // Verificar si la carpeta existe, si no, crearla
                     Path directoryPath = Paths.get(directory);
@@ -110,7 +110,7 @@ public class ProductService {
                 // Renombrar la imagen asociada si el nombre del producto cambia
                 if (!oldImage.equals(newFileName)) {
                     Path oldPath = Paths.get(oldImage);
-                    Path newPath = Paths.get("images" + "\\" + newFileName);
+                    Path newPath = Paths.get("images" + "/" + newFileName);
                     Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
                     product.setImage(newPath.toString());
                 }
