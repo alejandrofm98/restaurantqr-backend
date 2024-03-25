@@ -1,12 +1,10 @@
 package com.example.demo.auth;
 
-import com.example.demo.config.ErrorConfig;
-import com.example.demo.config.FilterConfig;
+
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +20,6 @@ import static com.example.demo.utils.Constants.*;
 public class AuthControllerPublic {
 
     private final AuthService authService;
-
-    private final FilterConfig filter = new FilterConfig();
 
     @PostMapping(value ="login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -45,11 +41,6 @@ public class AuthControllerPublic {
             );
             return ResponseEntity.ok(authResponse);
     }
-
-
-
-
-
 
 }
 

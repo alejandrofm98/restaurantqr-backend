@@ -1,11 +1,11 @@
 package com.example.demo.auth;
 
 import com.example.demo.entity.User;
-import com.example.demo.entity.UsuarioRol;
+import com.example.demo.entity.UserRol;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.UsuarioRolRepository;
+import com.example.demo.repository.UserRolRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,20 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final UsuarioRolRepository usuarioRolRepository;
+    private final UserRolRepository userRolRepository;
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
         UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token=jwtService.getToken(user);
-        return AuthResponse.builder().token(token).build();
+        User idUser = searchUserWithIdByUserName(user.getUsername());
+        UserRol userRol = userRolRepository.findByIdUser(idUser.getId());
+//        AuthResponse tokens = AuthResponse.builder().token(token).build();
+        return new AuthResponse(token, userRol.getIdRol());
+    }
+
+    public User searchUserWithIdByUserName(String userName) {
+        return userRepository.findUserWithIdByUsername(userName);
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -50,11 +57,14 @@ public class AuthService {
 
         userRepository.save(user);
 
-        UsuarioRol rol = UsuarioRol.builder().idUsuario(user.getId()).idRol(request.getRol()).build();
+        UserRol rol = UserRol.builder().idUser(user.getId()).idRol(request.getRol()).build();
 
-        usuarioRolRepository.save(rol);
 
-        return AuthResponse.builder().token(jwtService.getToken(user)).build();
+        userRolRepository.save(rol);
+        String token=jwtService.getToken(user);
+//        return AuthResponse.builder().token(jwtService.getToken(user)).build();
+
+        return new AuthResponse(token, request.getRol());
     }
 
 }

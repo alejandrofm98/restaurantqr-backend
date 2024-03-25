@@ -5,15 +5,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collection;
 
 @Component
 @WebFilter("/*")
@@ -57,17 +56,39 @@ public class FilterConfig implements Filter {
     }
 
 
-    private String extractRequestBody(HttpServletRequest request) throws IOException {
+    public static String extractRequestBody(HttpServletRequest request) throws IOException, ServletException {
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = request.getReader()) {
-            char[] charBuffer = new char[128];
-            int bytesRead;
-            while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
-                stringBuilder.append(charBuffer, 0, bytesRead);
+
+        // Verificar si la solicitud es de tipo 'multipart/form-data' (archivos adjuntos)
+        if (isMultipartContent(request)) {
+            Collection<Part> parts = request.getParts();
+            for (Part part : parts) {
+                if (part.getHeader("content-disposition") != null) {
+                    InputStream inputStream = part.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    char[] charBuffer = new char[128];
+                    int bytesRead;
+                    while ((bytesRead = reader.read(charBuffer)) != -1) {
+                        stringBuilder.append(charBuffer, 0, bytesRead);
+                    }
+                }
+            }
+        } else { // Si no es 'multipart/form-data', entonces es un formulario normal
+            try (BufferedReader bufferedReader = request.getReader()) {
+                char[] charBuffer = new char[128];
+                int bytesRead;
+                while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
+                    stringBuilder.append(charBuffer, 0, bytesRead);
+                }
             }
         }
+
         // Eliminar saltos de línea y espacios en blanco innecesarios
         return stringBuilder.toString().replaceAll("\\s+", "");
+    }
+
+    private static boolean isMultipartContent(HttpServletRequest request) {
+        return request.getContentType() != null && request.getContentType().startsWith("multipart/form-data");
     }
 
 

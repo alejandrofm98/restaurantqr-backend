@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="usuario_rol")
-public class UsuarioRol {
+@Table(name ="user_rol")
+public class UserRol {
     @Id
-    Integer idUsuario;
+    Integer idUser;
     Integer idRol;
 }
