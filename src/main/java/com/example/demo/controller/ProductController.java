@@ -81,7 +81,7 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/products",
+        Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + "/products",
                 "All products displayed correctly",
                 products.toString());
         return ResponseEntity.ok(products);
