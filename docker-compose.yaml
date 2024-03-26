@@ -1,22 +1,38 @@
 version: "3"
 services:
-#  java:
-#    build:
-#      dockerfile: docker/java/java.dockerfile
-#      context: .
-#    volumes:
-#      - ./src:/app/src:rw,cached
-#    ports:
-#      - 4000:4000
+  java:
+    build:
+      dockerfile: docker/java/java.dockerfile
+      context: .
+    restart: on-failure
+    command: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_PORT_ON_CONTAINER}"
+    volumes:
+      - ./:/app
+    ports:
+      - ${APPLICATION_PORT}:8080
+      - ${DEBUG_PORT_ON_DOCKER_HOST}:${DEBUG_PORT_ON_CONTAINER}
+    env_file:
+      - .env.local
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "jdbc:mysql://mysql:$MYSQLDB_DOCKER_PORT/$MYSQL_DATABASE?allowPublicKeyRetrieval=true&useSSL=false",
+        "spring.datasource.username": "$MYSQL_USER",
+        "spring.datasource.password": "$MYSQL_PASSWORD",
+        "spring.datasource.driverClassName": "com.mysql.cj.jdbc.Driver",
+        "spring.jpa.hibernate.ddl-auto": "update"
+      }'
+    depends_on:
+      - mysql
   mysql:
+    hostname: mysql
     image: mysql:8.0
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "${MYSQLDB_DOCKER_PORT}:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-main}
-      MYSQL_USER: ${MYSQL_USER:-user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - java-db:/var/lib/mysql
 volumes:
