@@ -18,9 +18,9 @@ public class Product {
     Integer id;
     String name;
     String description;
-    String price;
+    Float price;
     Integer category;
     Integer status;
-    Integer idempresa;
+    String business_uuid;
     String image;
 }

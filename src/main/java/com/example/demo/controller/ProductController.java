@@ -27,8 +27,8 @@ public class ProductController {
 
     //Insertar productos + foto
     @PostMapping(value = "products", consumes = {"multipart/form-data"})
-    public Product uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") String price, @RequestParam("category") Integer category, @RequestParam("status") Integer status, @RequestParam("idempresa") Integer idempresa) throws IOException {
-        Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, idempresa);
+    public Product uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") Float price, @RequestParam("category") Integer category, @RequestParam("status") Integer status, @RequestParam("business_uuid") String business_uuid) throws IOException {
+        Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, business_uuid);
         Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
                 "Successfully inserted product",
                 uploadedProduct.toString());
@@ -43,13 +43,13 @@ public class ProductController {
             @RequestParam(value = "image", required = false) MultipartFile file,
             @RequestParam String name,
             @RequestParam String description,
-            @RequestParam String price,
+            @RequestParam Float price,
             @RequestParam Integer category,
             @RequestParam Integer status,
-            @RequestParam Integer idempresa
+            @RequestParam String business_uuid
     ) {
         try {
-            Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, idempresa);
+            Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, business_uuid);
             Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/"+id,
                     "Successfully updated product",
                     updatedProduct.toString()

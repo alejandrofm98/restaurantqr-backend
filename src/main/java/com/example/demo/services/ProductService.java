@@ -29,14 +29,14 @@ public class ProductService {
     }
 
 
-    public Product uploadImage(MultipartFile file, String name, String description, String price, Integer category, Integer status, Integer idempresa) throws IOException {
+    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setCategory(category);
         product.setStatus(status);
-        product.setIdempresa(idempresa);
+        product.setBusiness_uuid(business_uuid);
 
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
@@ -65,7 +65,7 @@ public class ProductService {
     }
 
 
-    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, String price, Integer category, Integer status, Integer idempresa) throws IOException {
+    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -77,7 +77,7 @@ public class ProductService {
             product.setPrice(price);
             product.setCategory(category);
             product.setStatus(status);
-            product.setIdempresa(idempresa);
+            product.setBusiness_uuid(business_uuid);
 
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();
