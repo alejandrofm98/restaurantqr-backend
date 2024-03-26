@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -150,6 +151,10 @@ public class ProductService {
 
         // Devolver el producto eliminado
         return product;
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
 
