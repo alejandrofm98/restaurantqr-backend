@@ -1,22 +1,19 @@
 Copiamos el archivo `.env.example` y creamos archivo `.env`. Nos aseguramos de que las variables tengan su valor
 correspondiente
 
-````text
-MYSQL_USER=administrador
-MYSQL_PASSWORD=administrador
-MYSQL_PORT=3306
-MYSQL_ROOT_PASSWORD=rootpassword
-MYSQL_DATABASE=restaurante
-````
+Una vez asignado todos los valores a las variables, se puede iniciar con
 
-
-Inicializar docker
 ```shell
-docker-compose up -d
+docker compose up --build
 ```
 
-Eliminar los contenedores
+## Configuración Debug
+Para utilizar el modo debug, tendremos que copiar el valor de la variable `DEBUG_PORT_ON_DOCKER_HOST`
+del archivo **.env** 
 
-`````shell
-docker-compose down -v
-`````
+Y añadimos una nueva configuración remota de JVM
+![EditConfigurations](docker/docs/01_edit_config.png)
+![SelectRemote](docker/docs/02_select_jvm_debug.png)
+![ConfigRemote](docker/docs/03_config_remote.png)
+
+En `Port` se debe poner el valor asignado a la variable de entorno
