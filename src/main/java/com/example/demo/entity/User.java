@@ -30,6 +30,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     String username;
     String password;
+    Integer rol;
+    String business_uuid;
 
 
 

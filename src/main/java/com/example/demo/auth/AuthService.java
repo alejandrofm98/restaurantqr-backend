@@ -51,6 +51,8 @@ public class AuthService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .username(request.getUsername())
+                .rol(request.getRol())
+                .business_uuid(request.getBusiness_uuid())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
