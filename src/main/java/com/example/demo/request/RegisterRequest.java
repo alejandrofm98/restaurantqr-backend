@@ -16,4 +16,5 @@ public class RegisterRequest {
     String username;
     String password;
     Integer rol;
+    String business_uuid;
 }

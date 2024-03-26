@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,20 +30,20 @@ public class ProductService {
     }
 
 
-    public Product uploadImage(MultipartFile file, String name, String description, String price, Integer category, Integer status, Integer idempresa) throws IOException {
+    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setCategory(category);
         product.setStatus(status);
-        product.setIdempresa(idempresa);
+        product.setBusiness_uuid(business_uuid);
 
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
-            String directory = "images";
+            String directory = "images/"+product.getBusiness_uuid();
             String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
@@ -65,7 +66,7 @@ public class ProductService {
     }
 
 
-    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, String price, Integer category, Integer status, Integer idempresa) throws IOException {
+    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -77,13 +78,13 @@ public class ProductService {
             product.setPrice(price);
             product.setCategory(category);
             product.setStatus(status);
-            product.setIdempresa(idempresa);
+            product.setBusiness_uuid(business_uuid);
 
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();
                 String extension = getFileExtension(originalFileName);
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
-                    String directory = "images";
+                    String directory = "images/"+product.getBusiness_uuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
                     // Verificar si la carpeta existe, si no, crearla
@@ -150,6 +151,10 @@ public class ProductService {
 
         // Devolver el producto eliminado
         return product;
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
 
