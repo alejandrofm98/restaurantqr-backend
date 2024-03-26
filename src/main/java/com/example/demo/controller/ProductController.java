@@ -50,7 +50,7 @@ public class ProductController {
     ) {
         try {
             Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, idempresa);
-            Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/{id}",
+            Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/"+id,
                     "Successfully updated product",
                     updatedProduct.toString()
             );
@@ -67,7 +67,7 @@ public class ProductController {
             // Eliminar el producto y obtener el producto eliminado
             Product deletedProduct = productService.deleteProductAndImage(id);
 
-            Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/products/{id}",
+            Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/products/"+id,
                     "Successfully deleted product",
                     deletedProduct.toString());
 
