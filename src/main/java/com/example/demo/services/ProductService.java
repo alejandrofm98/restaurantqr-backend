@@ -42,7 +42,7 @@ public class ProductService {
         String fileExtension = getFileExtension(originalFileName);
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
-            String directory = "images";
+            String directory = "images/"+product.getBusiness_uuid();
             String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
@@ -83,7 +83,7 @@ public class ProductService {
                 String originalFileName = file.getOriginalFilename();
                 String extension = getFileExtension(originalFileName);
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
-                    String directory = "images";
+                    String directory = "images/"+product.getBusiness_uuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
                     // Verificar si la carpeta existe, si no, crearla
