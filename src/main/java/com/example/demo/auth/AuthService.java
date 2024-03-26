@@ -1,11 +1,9 @@
 package com.example.demo.auth;
 
 import com.example.demo.entity.User;
-import com.example.demo.entity.UserRol;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.UserRolRepository;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +23,14 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final UserRolRepository userRolRepository;
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
         UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token=jwtService.getToken(user);
         User idUser = searchUserWithIdByUserName(user.getUsername());
-        UserRol userRol = userRolRepository.findByIdUser(idUser.getId());
-//        AuthResponse tokens = AuthResponse.builder().token(token).build();
-        return new AuthResponse(token, userRol.getIdRol());
+
+        return new AuthResponse(token, idUser.getRol());
     }
 
     public User searchUserWithIdByUserName(String userName) {
@@ -56,17 +52,9 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-
         userRepository.save(user);
-
-        UserRol rol = UserRol.builder().idUser(user.getId()).idRol(request.getRol()).build();
-
-
-        userRolRepository.save(rol);
         String token=jwtService.getToken(user);
-//        return AuthResponse.builder().token(jwtService.getToken(user)).build();
-
-        return new AuthResponse(token, request.getRol());
+        return new AuthResponse(token, user.getRol());
     }
 
 }
