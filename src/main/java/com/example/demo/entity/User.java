@@ -32,6 +32,7 @@ public class User implements UserDetails {
     String password;
     Integer rol;
     String business_uuid;
+    Boolean status;
 
 
 
