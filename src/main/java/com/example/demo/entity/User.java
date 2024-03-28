@@ -8,10 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 @Data
@@ -32,16 +34,14 @@ public class User implements UserDetails {
     String password;
     Integer rol;
     String business_uuid;
-
+    Boolean status;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + getRol()));
+        return authorities;
     }
-
-
-
 
     @Override
     public boolean isAccountNonExpired() {

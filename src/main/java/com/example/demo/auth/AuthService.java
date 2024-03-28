@@ -49,12 +49,26 @@ public class AuthService {
                 .username(request.getUsername())
                 .rol(request.getRol())
                 .business_uuid(request.getBusiness_uuid())
+                .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
         userRepository.save(user);
         String token=jwtService.getToken(user);
         return new AuthResponse(token, user.getRol());
+    }
+
+
+    public void updateUser(Integer userId, RegisterRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exceptions("User not found"));
+        user.setName(request.getName());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setRol(request.getRol());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setStatus(request.getStatus());
+        user.setBusiness_uuid(request.getBusiness_uuid());
+        userRepository.save(user);
     }
 
 }
