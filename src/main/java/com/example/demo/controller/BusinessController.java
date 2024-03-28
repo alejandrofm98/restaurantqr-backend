@@ -3,17 +3,20 @@ package com.example.demo.controller;
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.entity.Business;
 import com.example.demo.repository.BusinessRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.utils.Constants.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(CONSTANT_SECURE_URL)
+@PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
+@RequiredArgsConstructor
 public class BusinessController {
 
-    @Autowired
-    private BusinessRepository businessRepository;
+    private final BusinessRepository businessRepository;
 
     //Insert
     @PostMapping("/business")
