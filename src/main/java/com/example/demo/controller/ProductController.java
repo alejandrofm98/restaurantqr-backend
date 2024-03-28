@@ -7,21 +7,23 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.example.demo.utils.Constants.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(CONSTANT_SECURE_URL)
+@PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
+
 public class ProductController {
 
     private final ProductService productService;
 
-    @Autowired
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -77,16 +79,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + "/products",
-                "All products displayed correctly",
-                products.toString());
-        return ResponseEntity.ok(products);
-    }
-
 
 
 }
