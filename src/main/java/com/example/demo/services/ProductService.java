@@ -15,6 +15,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
+
 @Service
 public class ProductService {
 
@@ -41,6 +43,12 @@ public class ProductService {
 
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
+
+        long maxSizeBytes = CONSTANT_IMAGE_MB * 1024 * 1024; // 4 MB en bytes
+        if (file.getSize() > maxSizeBytes) {
+            throw new IllegalArgumentException("The file size exceeds the maximum allowed size of 4 MB.");
+        }
+
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
             String directory = "images/"+product.getBusiness_uuid();
@@ -83,9 +91,17 @@ public class ProductService {
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();
                 String extension = getFileExtension(originalFileName);
+
+                // Limitar el tamaño máximo del archivo a 4 MB
+                long maxSizeBytes = CONSTANT_IMAGE_MB * 1024 * 1024; // 4 MB en bytes
+                if (file.getSize() > maxSizeBytes) {
+                    throw new IllegalArgumentException("The file size exceeds the maximum allowed size of 4 MB.");
+                }
+
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
                     String directory = "images/"+product.getBusiness_uuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
+
 
                     // Verificar si la carpeta existe, si no, crearla
                     Path directoryPath = Paths.get(directory);
