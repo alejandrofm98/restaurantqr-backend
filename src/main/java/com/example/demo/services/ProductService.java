@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.entity.Product;
+import com.example.demo.exception.Exceptions;
+import com.example.demo.repository.BusinessRepository;
 import com.example.demo.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +20,12 @@ import java.util.Optional;
 import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
 
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final BusinessRepository businessRepository;
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);
@@ -39,7 +39,11 @@ public class ProductService {
         product.setPrice(price);
         product.setCategory(category);
         product.setStatus(status);
-        product.setBusiness_uuid(business_uuid);
+        if(!businessRepository.existsByBusinessUuid(business_uuid)){
+            throw new Exceptions("The business does not exist");
+        }else{
+            product.setBusiness_uuid(business_uuid);
+        }
 
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
@@ -86,7 +90,12 @@ public class ProductService {
             product.setPrice(price);
             product.setCategory(category);
             product.setStatus(status);
-            product.setBusiness_uuid(business_uuid);
+
+            if(!businessRepository.existsByBusinessUuid(business_uuid)){
+                throw new Exceptions("The business does not exist");
+            }else{
+                product.setBusiness_uuid(business_uuid);
+            }
 
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BusinessRepository extends JpaRepository<Business, Integer> {
+    boolean existsByBusinessUuid(String businessUuid);
 }
