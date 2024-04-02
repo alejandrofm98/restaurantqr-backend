@@ -1,12 +1,12 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.request.LoginRequest;
-import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
