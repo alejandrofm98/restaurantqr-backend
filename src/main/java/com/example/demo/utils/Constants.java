@@ -14,7 +14,6 @@ public class Constants {
 
     public final static String CONSTANT_ROL_OWNER = "3";
 
-
-
+    public final static Integer CONSTANT_IMAGE_MB = 4;
 
 }
