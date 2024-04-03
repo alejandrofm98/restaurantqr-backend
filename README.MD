@@ -1,3 +1,7 @@
+Configuramos el archivo application.properties basandonos en el application-example.properties
+Rellenaremos los datos vacios con los valores del entorno en que se encuentre, proximamente estos
+datos se encontraran en bitwarden.click2eat.es
+
 Copiamos el archivo `.env.example` y creamos archivo `.env`. Nos aseguramos de que las variables tengan su valor
 correspondiente
 
