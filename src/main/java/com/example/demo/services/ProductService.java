@@ -32,17 +32,17 @@ public class ProductService {
     }
 
 
-    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
+    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String businessUuid) throws IOException {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setCategory(category);
         product.setStatus(status);
-        if(!businessRepository.existsByBusinessUuid(business_uuid)){
+        if(!businessRepository.existsByBusinessUuid(businessUuid)){
             throw new Exceptions("The business does not exist");
         }else{
-            product.setBusiness_uuid(business_uuid);
+            product.setBusinessUuid(businessUuid);
         }
 
         String originalFileName = file.getOriginalFilename();
@@ -55,7 +55,7 @@ public class ProductService {
 
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
-            String directory = "images/"+product.getBusiness_uuid();
+            String directory = "images/"+product.getBusinessUuid();
             String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
@@ -78,7 +78,7 @@ public class ProductService {
     }
 
 
-    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
+    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String businessUuid) throws IOException {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -91,10 +91,10 @@ public class ProductService {
             product.setCategory(category);
             product.setStatus(status);
 
-            if(!businessRepository.existsByBusinessUuid(business_uuid)){
+            if(!businessRepository.existsByBusinessUuid(businessUuid)){
                 throw new Exceptions("The business does not exist");
             }else{
-                product.setBusiness_uuid(business_uuid);
+                product.setBusinessUuid(businessUuid);
             }
 
             if (file != null && !file.isEmpty()) {
@@ -108,7 +108,7 @@ public class ProductService {
                 }
 
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
-                    String directory = "images/"+product.getBusiness_uuid();
+                    String directory = "images/"+product.getBusinessUuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
 
