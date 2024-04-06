@@ -4,7 +4,6 @@ import com.example.demo.config.Log4j2Config;
 import com.example.demo.entity.Product;
 import com.example.demo.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +29,8 @@ public class ProductController {
 
     //Insertar productos + foto
     @PostMapping(value = "products", consumes = {"multipart/form-data"})
-    public Product uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") Float price, @RequestParam("category") Integer category, @RequestParam("status") Integer status, @RequestParam("business_uuid") String business_uuid) throws IOException {
-        Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, business_uuid);
+    public Product uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") Float price, @RequestParam("category") Integer category, @RequestParam("status") Integer status, @RequestParam("businessUuid") String businessUuid) throws IOException {
+        Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, businessUuid);
         Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
                 "Successfully inserted product",
                 uploadedProduct.toString());
@@ -49,10 +48,10 @@ public class ProductController {
             @RequestParam Float price,
             @RequestParam Integer category,
             @RequestParam Integer status,
-            @RequestParam String business_uuid
+            @RequestParam String businessUuid
     ) {
         try {
-            Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, business_uuid);
+            Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, businessUuid);
             Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/"+id,
                     "Successfully updated product",
                     updatedProduct.toString()

@@ -45,7 +45,7 @@ public class AuthService {
             throw new Exceptions("The user name is already in use.");
         }
 
-        if(!businessRepository.existsByBusinessUuid(request.getBusiness_uuid())){
+        if(!businessRepository.existsByBusinessUuid(request.getBusinessUuid())){
             throw new Exceptions("The business does not exist");
         }
 
@@ -57,7 +57,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .rol(rol)
-                .business_uuid(request.getBusiness_uuid())
+                .businessUuid(request.getBusinessUuid())
                 .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
@@ -77,10 +77,10 @@ public class AuthService {
         user.setRol(request.getRol());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setStatus(request.getStatus());
-        if(!businessRepository.existsByBusinessUuid(request.getBusiness_uuid())){
+        if(!businessRepository.existsByBusinessUuid(request.getBusinessUuid())){
             throw new Exceptions("The business does not exist");
         }
-        user.setBusiness_uuid(request.getBusiness_uuid());
+        user.setBusinessUuid(request.getBusinessUuid());
         userRepository.save(user);
     }
 

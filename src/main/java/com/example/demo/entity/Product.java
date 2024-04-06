@@ -21,6 +21,6 @@ public class Product {
     Float price;
     Integer category;
     Integer status;
-    String business_uuid;
+    String businessUuid;
     String image;
 }
