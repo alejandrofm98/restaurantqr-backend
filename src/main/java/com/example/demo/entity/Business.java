@@ -15,9 +15,8 @@ import java.util.UUID;
 @Entity
 @Table(name ="business")
 public class Business {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
     @Column(name = "business_uuid", unique = true, nullable = false)
     String businessUuid;
 

@@ -20,7 +20,7 @@ public class BusinessController {
 
     //Update
     @PutMapping("/business/{id}")
-    public Business updateBusiness(@PathVariable Integer id, @RequestBody Business updatedBusiness) {
+    public Business updateBusiness(@PathVariable String id, @RequestBody Business updatedBusiness) {
 
         return businessRepository.findById(id)
                 .map(business -> {
@@ -32,9 +32,9 @@ public class BusinessController {
                 })
                 .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
     }
-    //Delete
+//    //Delete
     @DeleteMapping("/business/{id}")
-    public Business deleteBusiness(@PathVariable Integer id) {
+    public Business deleteBusiness(@PathVariable String id) {
         Business businessToDelete = businessRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
 
