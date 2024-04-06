@@ -1,15 +1,13 @@
 package com.example.demo.auth;
 
 
-import static com.example.demo.utils.Constants.CONSTANT_GET;
-import static com.example.demo.utils.Constants.CONSTANT_POST;
-import static com.example.demo.utils.Constants.CONSTANT_PUBLIC_URL;
-
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.EmailDetails;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
+import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
 import java.util.List;
@@ -21,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.demo.utils.Constants.*;
+
 @RestController
 @RequestMapping(CONSTANT_PUBLIC_URL)
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class AuthControllerPublic {
   private final AuthService authService;
   private final ProductService productService;
   private final EmailService emailService;
+  private final BusinessRepository businessRepository;
 
   @PostMapping(value = "login")
   public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
@@ -63,6 +64,17 @@ public class AuthControllerPublic {
         "Registro realizado correctamente", "Registro realizado.", "");
     emailService.sendMail(emailDetails);
     return ResponseEntity.ok(authResponse);
+  }
+
+
+
+  //Insert
+  @PostMapping("/business")
+  public Business createBusiness(@RequestBody Business business) {
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/business",
+            "Successfully inserted business",
+            business.toString());
+    return businessRepository.save(business);
   }
 
 

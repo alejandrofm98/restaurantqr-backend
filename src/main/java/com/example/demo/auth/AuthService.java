@@ -48,12 +48,15 @@ public class AuthService {
         if(!businessRepository.existsByBusinessUuid(request.getBusiness_uuid())){
             throw new Exceptions("The business does not exist");
         }
+
+        Integer rol = request.getRol() != null ? request.getRol() : 3;
+
         User user = User.builder().username(request.getUsername())
                 .name(request.getName())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .username(request.getUsername())
-                .rol(request.getRol())
+                .rol(rol)
                 .business_uuid(request.getBusiness_uuid())
                 .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
