@@ -4,7 +4,6 @@ import com.example.demo.config.Log4j2Config;
 import com.example.demo.entity.Business;
 import com.example.demo.repository.BusinessRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +17,10 @@ public class BusinessController {
 
     private final BusinessRepository businessRepository;
 
-    //Insert
-    @PostMapping("/business")
-    public Business createBusiness(@RequestBody Business business) {
-        Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/business",
-                "Successfully inserted business",
-                business.toString());
-        return businessRepository.save(business);
-    }
 
     //Update
     @PutMapping("/business/{id}")
-    public Business updateBusiness(@PathVariable Integer id, @RequestBody Business updatedBusiness) {
+    public Business updateBusiness(@PathVariable String id, @RequestBody Business updatedBusiness) {
 
         return businessRepository.findById(id)
                 .map(business -> {
@@ -41,9 +32,9 @@ public class BusinessController {
                 })
                 .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
     }
-    //Delete
+//    //Delete
     @DeleteMapping("/business/{id}")
-    public Business deleteBusiness(@PathVariable Integer id) {
+    public Business deleteBusiness(@PathVariable String id) {
         Business businessToDelete = businessRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
 

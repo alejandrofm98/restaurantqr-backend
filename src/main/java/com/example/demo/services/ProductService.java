@@ -1,9 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.entity.Product;
+import com.example.demo.exception.Exceptions;
+import com.example.demo.repository.BusinessRepository;
 import com.example.demo.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,28 +20,30 @@ import java.util.Optional;
 import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
 
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final BusinessRepository businessRepository;
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
 
-    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
+    public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String businessUuid) throws IOException {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setCategory(category);
         product.setStatus(status);
-        product.setBusiness_uuid(business_uuid);
+        if(!businessRepository.existsByBusinessUuid(businessUuid)){
+            throw new Exceptions("The business does not exist");
+        }else{
+            product.setBusinessUuid(businessUuid);
+        }
 
         String originalFileName = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFileName);
@@ -51,7 +55,7 @@ public class ProductService {
 
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
-            String directory = "images/"+product.getBusiness_uuid();
+            String directory = "images/"+product.getBusinessUuid();
             String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
@@ -74,7 +78,7 @@ public class ProductService {
     }
 
 
-    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String business_uuid) throws IOException {
+    public Product updateProductWithImage(Integer id, MultipartFile file, String name, String description, Float price, Integer category, Integer status, String businessUuid) throws IOException {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
@@ -86,7 +90,12 @@ public class ProductService {
             product.setPrice(price);
             product.setCategory(category);
             product.setStatus(status);
-            product.setBusiness_uuid(business_uuid);
+
+            if(!businessRepository.existsByBusinessUuid(businessUuid)){
+                throw new Exceptions("The business does not exist");
+            }else{
+                product.setBusinessUuid(businessUuid);
+            }
 
             if (file != null && !file.isEmpty()) {
                 String originalFileName = file.getOriginalFilename();
@@ -99,7 +108,7 @@ public class ProductService {
                 }
 
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
-                    String directory = "images/"+product.getBusiness_uuid();
+                    String directory = "images/"+product.getBusinessUuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
 

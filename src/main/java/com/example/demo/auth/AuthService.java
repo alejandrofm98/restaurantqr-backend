@@ -1,11 +1,12 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
+import com.example.demo.repository.BusinessRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.request.LoginRequest;
-import com.example.demo.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final BusinessRepository businessRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -42,13 +44,20 @@ public class AuthService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new Exceptions("The user name is already in use.");
         }
+
+        if(!businessRepository.existsByBusinessUuid(request.getBusinessUuid())){
+            throw new Exceptions("The business does not exist");
+        }
+
+        Integer rol = request.getRol() != null ? request.getRol() : 3;
+
         User user = User.builder().username(request.getUsername())
                 .name(request.getName())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .username(request.getUsername())
-                .rol(request.getRol())
-                .business_uuid(request.getBusiness_uuid())
+                .rol(rol)
+                .businessUuid(request.getBusinessUuid())
                 .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
@@ -60,6 +69,7 @@ public class AuthService {
 
 
     public void updateUser(Integer userId, RegisterRequest request) {
+
         User user = userRepository.findById(userId).orElseThrow(() -> new Exceptions("User not found"));
         user.setName(request.getName());
         user.setLastname(request.getLastname());
@@ -67,7 +77,10 @@ public class AuthService {
         user.setRol(request.getRol());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setStatus(request.getStatus());
-        user.setBusiness_uuid(request.getBusiness_uuid());
+        if(!businessRepository.existsByBusinessUuid(request.getBusinessUuid())){
+            throw new Exceptions("The business does not exist");
+        }
+        user.setBusinessUuid(request.getBusinessUuid());
         userRepository.save(user);
     }
 

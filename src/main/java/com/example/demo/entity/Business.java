@@ -15,16 +15,15 @@ import java.util.UUID;
 @Entity
 @Table(name ="business")
 public class Business {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
     @Column(name = "business_uuid", unique = true, nullable = false)
-    String business_uuid;
+    String businessUuid;
 
     String name;
 
     @PrePersist
     protected void onCreate() {
-        this.business_uuid = UUID.randomUUID().toString();
+        this.businessUuid = UUID.randomUUID().toString();
     }
 }
