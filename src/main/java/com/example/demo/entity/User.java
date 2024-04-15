@@ -35,6 +35,7 @@ public class User implements UserDetails {
     Integer rol;
     String businessUuid;
     Boolean status;
+    String fcmToken;
 
 
     @Override

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,11 +29,17 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+
+        // Actualizar el campo fcmToken
+        user.setFcmToken(request.getFcmToken());
+        userRepository.save(user);
+
         String token=jwtService.getToken(user);
         User idUser = searchUserWithIdByUserName(user.getUsername());
-
         return new AuthResponse(token, idUser.getRol());
     }
 
@@ -60,6 +68,7 @@ public class AuthService {
                 .businessUuid(request.getBusinessUuid())
                 .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
+                .fcmToken(request.getFcmToken())
                 .build();
 
         userRepository.save(user);
