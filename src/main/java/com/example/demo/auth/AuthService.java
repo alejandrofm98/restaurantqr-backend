@@ -60,6 +60,7 @@ public class AuthService {
                 .businessUuid(request.getBusinessUuid())
                 .status(true)
                 .password(passwordEncoder.encode(request.getPassword()))
+                .fcmToken(request.getFcmToken())
                 .build();
 
         userRepository.save(user);

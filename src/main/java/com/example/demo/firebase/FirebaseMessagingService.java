@@ -1,4 +1,4 @@
-package com.example.demo.Firebase;
+package com.example.demo.firebase;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;

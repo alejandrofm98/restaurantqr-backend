@@ -35,6 +35,7 @@ logs/*
 src/main/resources/application.properties
 out/*
 images/*
+src/main/resources/firebase-service-account.json
 
 .env
 .env.local

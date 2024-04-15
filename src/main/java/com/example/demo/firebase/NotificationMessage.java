@@ -1,4 +1,4 @@
-package com.example.demo.Firebase;
+package com.example.demo.firebase;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.demo.Firebase;
+package com.example.demo.firebase;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
