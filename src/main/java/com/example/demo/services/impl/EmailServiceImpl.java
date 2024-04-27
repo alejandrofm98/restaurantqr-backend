@@ -29,17 +29,18 @@ public class EmailServiceImpl implements EmailService {
     try {
 
       // Creating a simple mail message
-      SimpleMailMessage mailMessage
-          = new SimpleMailMessage();
+
+      MimeMessage message = javaMailSender.createMimeMessage();
 
       // Setting up necessary details
-      mailMessage.setFrom(sender);
-      mailMessage.setTo(details.getRecipient());
-      mailMessage.setText(details.getMsgBody());
-      mailMessage.setSubject(details.getSubject());
+      message.setFrom(sender);
+      message.setRecipients(MimeMessage.RecipientType.TO,details.getRecipient());
+      message.setContent(details.getMsgBody(),"text/html; charset=utf-8");
+      message.setSubject(details.getSubject());
+
 
       // Sending the mail
-      javaMailSender.send(mailMessage);
+      javaMailSender.send(message);
       Log4j2Config.logMethod("sendMail()",
           "Mail Sent Succesfully from " + sender + " to " + details.getRecipient()
               + " with Subject: " + details.getSubject());
