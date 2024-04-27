@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
           = new MimeMessageHelper(mimeMessage, true);
       mimeMessageHelper.setFrom(sender);
       mimeMessageHelper.setTo(details.getRecipient());
-      mimeMessageHelper.setText(details.getMsgBody(),true);
+      mimeMessage.setContent(details.getMsgBody(),"text/html; charset=utf-8");
       mimeMessageHelper.setSubject(
           details.getSubject());
 
