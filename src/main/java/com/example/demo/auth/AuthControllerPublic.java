@@ -68,9 +68,12 @@ public class AuthControllerPublic {
     // Lee el contenido del archivo HTML
     String htmlContent = "";
     try {
-      htmlContent = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/emailRegister.html")), StandardCharsets.UTF_8);
+      //Local
+      // htmlContent = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/emailRegister.html")), StandardCharsets.UTF_8);
+      //Maquinas
+      htmlContent = new String(Files.readAllBytes(Paths.get("BOOT-INF/classes/templates/emailRegister.html")), StandardCharsets.UTF_8);
     } catch (IOException e) {
-      e.printStackTrace();
+      Log4j2Config.logRequestError("Error finding registration template for email");
       // Maneja la excepción según tu lógica de negocio
     }
 
