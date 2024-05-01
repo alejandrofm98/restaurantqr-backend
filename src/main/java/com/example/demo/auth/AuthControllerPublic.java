@@ -10,6 +10,11 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -60,10 +65,20 @@ public class AuthControllerPublic {
         authResponse.getToken(),
         request.toString()
     );
+    // Lee el contenido del archivo HTML
+    String htmlContent = "";
+    try {
+      htmlContent = new String(Files.readAllBytes(Paths.get("src/main/resources/templates/emailRegister.html")), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      e.printStackTrace();
+      // Maneja la excepción según tu lógica de negocio
+    }
+
     EmailDetails emailDetails = new EmailDetails(request.getEmail(),
-        "Registro realizado correctamente", "Registro realizado.", "");
+            "Registro realizado correctamente", htmlContent, "");
     emailService.sendMail(emailDetails);
     return ResponseEntity.ok(authResponse);
+
   }
 
 
