@@ -21,6 +21,7 @@ public class Constants {
 
     public static final Integer CONSTANT_IMAGE_MB = 4;
 
+    public static final String EMAIL_REGISTER_TEMPLATE = "/templates/emailRegister.html";
 
     //MENSAJES LOGS
     public static final String LOGS_START_MESSAGE = "--------------Inicio--------------------";
