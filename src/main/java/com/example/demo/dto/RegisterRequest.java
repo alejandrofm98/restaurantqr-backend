@@ -18,4 +18,5 @@ public class RegisterRequest {
     Integer rol;
     String businessUuid;
     Boolean status;
+    String fcmToken;
 }
