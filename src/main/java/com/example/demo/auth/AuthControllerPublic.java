@@ -8,9 +8,7 @@ import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.EmailDetails;
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
@@ -40,11 +38,17 @@ public class AuthControllerPublic {
   @PostMapping(value = "login")
   public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
     AuthResponse authResponse = authService.login(request);
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
-        authResponse.getToken(),
-        request.toString()
-    );
-    return ResponseEntity.ok(authResponse);
+
+    if (authResponse.getUserResponse() instanceof UserResponse userResponse) {
+      String token = userResponse.getToken();
+
+      Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
+              token,
+              request.toString()
+      );
+    }
+      return ResponseEntity.ok(authResponse);
+
   }
 
 
@@ -61,12 +65,16 @@ public class AuthControllerPublic {
   @PostMapping(value = "register")
   public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
-
     authResponse = authService.register(request);
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-        authResponse.getToken(),
-        request.toString()
-    );
+
+
+    if (authResponse.getUserResponse() instanceof UserResponse userResponse) {
+      String token = userResponse.getToken();
+      Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
+              token,
+              request.toString()
+      );
+    }
     // Lee el contenido del archivo HTML
     try {
       String htmlContent = new String(
@@ -78,7 +86,6 @@ public class AuthControllerPublic {
 
     } catch (IOException e) {
       Log4j2Config.logRequestError("Error finding registration template for email");
-      // Maneja la excepción según tu lógica de negocio
     }
 
 
