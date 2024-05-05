@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 import static com.example.demo.utils.Constants.*;
 
 @RestController
@@ -25,6 +27,19 @@ public class BusinessController {
         return businessRepository.findById(id)
                 .map(business -> {
                     business.setName(updatedBusiness.getName());
+                    business.setAddress(updatedBusiness.getAddress());
+                    business.setCountry(updatedBusiness.getCountry());
+                    business.setDocumentNumber(updatedBusiness.getDocumentNumber());
+                    business.setDocumentType(updatedBusiness.getDocumentType());
+                    business.setIsActive(updatedBusiness.isActive());
+                    business.setLenguajeIso2(updatedBusiness.getLenguajeIso2());
+                    business.setLenguajeIso3(updatedBusiness.getLenguajeIso3());
+                    business.setPostalCode(updatedBusiness.getPostalCode());
+                    business.setProvince(updatedBusiness.getProvince());
+                    business.setState(updatedBusiness.getState());
+                    business.setTown(updatedBusiness.getTown());
+                    business.setUpdatedAt(LocalDateTime.now());
+
                     Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/business/"+id,
                             "Successfully updated business",
                             business.toString());
