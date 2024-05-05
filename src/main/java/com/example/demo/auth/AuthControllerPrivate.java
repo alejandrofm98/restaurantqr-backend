@@ -9,6 +9,7 @@ import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.repository.UserRepository;
@@ -45,10 +46,16 @@ public class AuthControllerPrivate {
   public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
+
+
+
+    String token = authResponse.getResponse().getToken();
+
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-        authResponse.getToken(),
+            token,
         request.toString()
     );
+
     return ResponseEntity.ok(authResponse);
   }
 

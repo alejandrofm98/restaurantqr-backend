@@ -2,6 +2,7 @@ package com.example.demo.auth;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
@@ -16,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -39,13 +39,27 @@ public class AuthService {
         userRepository.save(user);
 
         String token=jwtService.getToken(user);
-        User idUser = searchUserWithIdByUserName(user.getUsername());
-        return new AuthResponse(token, idUser.getRol());
+
+        UserResponse response = UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .lastname(user.getLastname())
+                .name(user.getName())
+                .username(user.getUsername())
+                .status(user.getStatus())
+                .rol(user.getRol())
+                .businessUuid(user.getBusinessUuid())
+                .build();
+
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
+                .build();
+
+        return new AuthResponse(responseData);
     }
 
-    public User searchUserWithIdByUserName(String userName) {
-        return userRepository.findUserWithIdByUsername(userName);
-    }
 
     public AuthResponse register(RegisterRequest request) {
 
@@ -71,9 +85,28 @@ public class AuthService {
                 .fcmToken(request.getFcmToken())
                 .build();
 
-        userRepository.save(user);
+        User userSaved = userRepository.save(user);
         String token=jwtService.getToken(user);
-        return new AuthResponse(token, user.getRol());
+
+        UserResponse response = UserResponse.builder()
+                .id(userSaved.getId())
+                .email(userSaved.getEmail())
+                .lastname(userSaved.getLastname())
+                .name(userSaved.getName())
+                .username(userSaved.getUsername())
+                .status(userSaved.getStatus())
+                .rol(userSaved.getRol())
+                .businessUuid(userSaved.getBusinessUuid())
+                .build();
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
+                .build();
+
+
+
+        return new AuthResponse(responseData);
     }
 
 
