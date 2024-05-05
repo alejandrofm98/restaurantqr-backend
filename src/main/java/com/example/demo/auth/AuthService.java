@@ -1,8 +1,10 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.BusinessResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.dto.UserResponse;
+import com.example.demo.entity.Business;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
@@ -51,11 +53,36 @@ public class AuthService {
                 .businessUuid(user.getBusinessUuid())
                 .build();
 
+        Business business = businessRepository.findByBusinessUuid(user.getBusinessUuid()).orElseThrow();
+
+        String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
+
+        BusinessResponse businessResponse = BusinessResponse.builder()
+                .businessUuid(business.getBusinessUuid())
+                .name(business.getName())
+                .address(business.getAddress())
+                .country(business.getCountry())
+                .documentNumber(business.getDocumentNumber())
+                .documentType(business.getDocumentType())
+                .lenguajeIso2(business.getLenguajeIso2())
+                .lenguajeIso3(business.getLenguajeIso3())
+                .postalCode(business.getPostalCode())
+                .province(business.getProvince())
+                .state(business.getState())
+                .town(business.getTown())
+                .createdAt(business.getCreatedAt().toString())
+                .updatedAt(updatedAt)
+                .build();
+
+
 
         AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
                 .token(token)
                 .user(response)
+                .business(businessResponse)
                 .build();
+
+
 
         return new AuthResponse(responseData);
     }
@@ -99,9 +126,33 @@ public class AuthService {
                 .businessUuid(userSaved.getBusinessUuid())
                 .build();
 
+
+        Business business = businessRepository.findByBusinessUuid(user.getBusinessUuid()).orElseThrow();
+
+        String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
+
+        BusinessResponse businessResponse = BusinessResponse.builder()
+                .businessUuid(business.getBusinessUuid())
+                .name(business.getName())
+                .address(business.getAddress())
+                .country(business.getCountry())
+                .documentNumber(business.getDocumentNumber())
+                .documentType(business.getDocumentType())
+                .lenguajeIso2(business.getLenguajeIso2())
+                .lenguajeIso3(business.getLenguajeIso3())
+                .postalCode(business.getPostalCode())
+                .province(business.getProvince())
+                .state(business.getState())
+                .town(business.getTown())
+                .createdAt(business.getCreatedAt().toString())
+                .updatedAt(updatedAt)
+                .build();
+
+
         AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
                 .token(token)
                 .user(response)
+                .business(businessResponse)
                 .build();
 
 
