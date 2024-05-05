@@ -19,6 +19,7 @@ public class AuthResponse {
     public static class ResponseData {
         private String token;
         Object user;
+        Object business;
     }
 }
 

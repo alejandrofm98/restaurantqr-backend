@@ -48,4 +48,5 @@ public class Business {
         this.isActive = isActive;
         return previousValue;
     }
+
 }
