@@ -39,14 +39,13 @@ public class AuthControllerPublic {
   public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
     AuthResponse authResponse = authService.login(request);
 
-    if (authResponse.getUserResponse() instanceof UserResponse userResponse) {
-      String token = userResponse.getToken();
+      String token = authResponse.getResponse().getToken();
 
       Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
               token,
               request.toString()
       );
-    }
+
       return ResponseEntity.ok(authResponse);
 
   }
@@ -68,13 +67,12 @@ public class AuthControllerPublic {
     authResponse = authService.register(request);
 
 
-    if (authResponse.getUserResponse() instanceof UserResponse userResponse) {
-      String token = userResponse.getToken();
+      String token = authResponse.getResponse().getToken();
       Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
               token,
               request.toString()
       );
-    }
+
     // Lee el contenido del archivo HTML
     try {
       String htmlContent = new String(

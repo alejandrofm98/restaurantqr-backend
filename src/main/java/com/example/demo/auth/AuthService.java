@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -43,7 +42,6 @@ public class AuthService {
 
         UserResponse response = UserResponse.builder()
                 .id(user.getId())
-                .token(token)
                 .email(user.getEmail())
                 .lastname(user.getLastname())
                 .name(user.getName())
@@ -53,7 +51,13 @@ public class AuthService {
                 .businessUuid(user.getBusinessUuid())
                 .build();
 
-        return new AuthResponse(response);
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
+                .build();
+
+        return new AuthResponse(responseData);
     }
 
 
@@ -92,13 +96,17 @@ public class AuthService {
                 .username(userSaved.getUsername())
                 .status(userSaved.getStatus())
                 .rol(userSaved.getRol())
-                .token(token)
                 .businessUuid(userSaved.getBusinessUuid())
+                .build();
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
                 .build();
 
 
 
-        return new AuthResponse(response);
+        return new AuthResponse(responseData);
     }
 
 

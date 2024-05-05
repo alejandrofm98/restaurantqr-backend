@@ -17,6 +17,5 @@ public class UserResponse {
     String username;
     Boolean status;
     Integer rol;
-    String token;
     String businessUuid;
 }
