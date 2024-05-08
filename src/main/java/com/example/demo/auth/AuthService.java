@@ -57,6 +57,8 @@ public class AuthService {
 
         String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
 
+
+
         BusinessResponse businessResponse = BusinessResponse.builder()
                 .businessUuid(business.getBusinessUuid())
                 .name(business.getName())
@@ -71,6 +73,7 @@ public class AuthService {
                 .state(business.getState())
                 .town(business.getTown())
                 .createdAt(business.getCreatedAt().toString())
+                .isActive(business.isActive())
                 .updatedAt(updatedAt)
                 .build();
 
@@ -146,6 +149,7 @@ public class AuthService {
                 .town(business.getTown())
                 .createdAt(business.getCreatedAt().toString())
                 .updatedAt(updatedAt)
+                .isActive(business.isActive())
                 .build();
 
 
