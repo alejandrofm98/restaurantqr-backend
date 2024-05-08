@@ -45,10 +45,14 @@ public class AuthControllerPrivate {
   public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
+
+    String token = authResponse.getResponse().getToken();
+
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-        authResponse.getToken(),
+            token,
         request.toString()
     );
+
     return ResponseEntity.ok(authResponse);
   }
 

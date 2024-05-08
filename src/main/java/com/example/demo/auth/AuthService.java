@@ -1,7 +1,10 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.BusinessResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.UserResponse;
+import com.example.demo.entity.Business;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
@@ -16,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -39,13 +41,55 @@ public class AuthService {
         userRepository.save(user);
 
         String token=jwtService.getToken(user);
-        User idUser = searchUserWithIdByUserName(user.getUsername());
-        return new AuthResponse(token, idUser.getRol());
+
+        UserResponse response = UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .lastname(user.getLastname())
+                .name(user.getName())
+                .username(user.getUsername())
+                .status(user.getStatus())
+                .rol(user.getRol())
+                .businessUuid(user.getBusinessUuid())
+                .build();
+
+        Business business = businessRepository.findByBusinessUuid(user.getBusinessUuid()).orElseThrow();
+
+        String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
+
+
+
+        BusinessResponse businessResponse = BusinessResponse.builder()
+                .businessUuid(business.getBusinessUuid())
+                .name(business.getName())
+                .address(business.getAddress())
+                .country(business.getCountry())
+                .documentNumber(business.getDocumentNumber())
+                .documentType(business.getDocumentType())
+                .lenguajeIso2(business.getLenguajeIso2())
+                .lenguajeIso3(business.getLenguajeIso3())
+                .postalCode(business.getPostalCode())
+                .province(business.getProvince())
+                .state(business.getState())
+                .town(business.getTown())
+                .createdAt(business.getCreatedAt().toString())
+                .isActive(business.isActive())
+                .updatedAt(updatedAt)
+                .build();
+
+
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
+                .business(businessResponse)
+                .build();
+
+
+
+        return new AuthResponse(responseData);
     }
 
-    public User searchUserWithIdByUserName(String userName) {
-        return userRepository.findUserWithIdByUsername(userName);
-    }
 
     public AuthResponse register(RegisterRequest request) {
 
@@ -71,9 +115,53 @@ public class AuthService {
                 .fcmToken(request.getFcmToken())
                 .build();
 
-        userRepository.save(user);
+        User userSaved = userRepository.save(user);
         String token=jwtService.getToken(user);
-        return new AuthResponse(token, user.getRol());
+
+        UserResponse response = UserResponse.builder()
+                .id(userSaved.getId())
+                .email(userSaved.getEmail())
+                .lastname(userSaved.getLastname())
+                .name(userSaved.getName())
+                .username(userSaved.getUsername())
+                .status(userSaved.getStatus())
+                .rol(userSaved.getRol())
+                .businessUuid(userSaved.getBusinessUuid())
+                .build();
+
+
+        Business business = businessRepository.findByBusinessUuid(user.getBusinessUuid()).orElseThrow();
+
+        String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
+
+        BusinessResponse businessResponse = BusinessResponse.builder()
+                .businessUuid(business.getBusinessUuid())
+                .name(business.getName())
+                .address(business.getAddress())
+                .country(business.getCountry())
+                .documentNumber(business.getDocumentNumber())
+                .documentType(business.getDocumentType())
+                .lenguajeIso2(business.getLenguajeIso2())
+                .lenguajeIso3(business.getLenguajeIso3())
+                .postalCode(business.getPostalCode())
+                .province(business.getProvince())
+                .state(business.getState())
+                .town(business.getTown())
+                .createdAt(business.getCreatedAt().toString())
+                .updatedAt(updatedAt)
+                .isActive(business.isActive())
+                .build();
+
+
+        AuthResponse.ResponseData responseData = AuthResponse.ResponseData.builder()
+                .token(token)
+                .user(response)
+                .business(businessResponse)
+                .build();
+
+
+
+        return new AuthResponse(responseData);
     }
 
 
