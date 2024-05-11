@@ -1,12 +1,5 @@
 package com.example.demo.auth;
 
-import static com.example.demo.utils.Constants.CONSTANT_POST;
-import static com.example.demo.utils.Constants.CONSTANT_PUBLIC_URL;
-import static com.example.demo.utils.Constants.CONSTANT_PUT;
-import static com.example.demo.utils.Constants.CONSTANT_ROL_ADMIN;
-import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
-import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
-
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
@@ -23,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.example.demo.utils.Constants.*;
 
 @RestController
 @RequestMapping(CONSTANT_SECURE_URL)
@@ -75,13 +70,20 @@ public class AuthControllerPrivate {
   @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
   @GetMapping("users")
   public List<User> getAllUsers() {
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users",
+            "All users displayed correctly",
+            userRepository.findAll().toString());
     return userRepository.findAll();
+
   }
 
 
   @GetMapping("/users/{businessUuid}")
   public ResponseEntity<List<User>> getUsersByBusinessUuid(@PathVariable String businessUuid) {
     List<User> users = authService.getUsersByBusinessUuid(businessUuid);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "//users/{businessUuid}",
+            "Users for business displayed correctly",
+            users.toString());
     return ResponseEntity.ok(users);
   }
 
