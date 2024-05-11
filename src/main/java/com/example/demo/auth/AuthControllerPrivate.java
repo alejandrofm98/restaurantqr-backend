@@ -79,4 +79,11 @@ public class AuthControllerPrivate {
   }
 
 
+  @GetMapping("/users/{businessUuid}")
+  public ResponseEntity<List<User>> getUsersByBusinessUuid(@PathVariable String businessUuid) {
+    List<User> users = authService.getUsersByBusinessUuid(businessUuid);
+    return ResponseEntity.ok(users);
+  }
+
+
 }

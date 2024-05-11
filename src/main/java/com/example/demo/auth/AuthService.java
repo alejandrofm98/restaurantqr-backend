@@ -19,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -179,6 +182,10 @@ public class AuthService {
         }
         user.setBusinessUuid(request.getBusinessUuid());
         userRepository.save(user);
+    }
+
+    public List<User> getUsersByBusinessUuid(String businessUuid) {
+        return userRepository.findByBusinessUuid(businessUuid);
     }
 
 }
