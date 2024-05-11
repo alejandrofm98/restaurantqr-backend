@@ -19,11 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(CONSTANT_PUBLIC_URL)
@@ -57,6 +53,16 @@ public class AuthControllerPublic {
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/products",
         "All products displayed correctly",
         products.toString());
+    return ResponseEntity.ok(products);
+  }
+
+
+  @GetMapping("/products/{businessUuid}")
+  public ResponseEntity<List<Product>> getProductsByBusinessUuid(@PathVariable String businessUuid) {
+    List<Product> products = productService.getProductsByBusinessUuid(businessUuid);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/products/{businessUuid}",
+            "Products for business displayed correctly",
+            products.toString());
     return ResponseEntity.ok(products);
   }
 

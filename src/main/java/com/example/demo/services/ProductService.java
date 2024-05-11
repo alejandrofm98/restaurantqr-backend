@@ -27,10 +27,6 @@ public class ProductService {
 
     private final BusinessRepository businessRepository;
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
-    }
-
 
     public Product uploadImage(MultipartFile file, String name, String description, Float price, Integer category, Integer status, String businessUuid) throws IOException {
         Product product = new Product();
@@ -182,7 +178,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-
+    public List<Product> getProductsByBusinessUuid(String businessUuid) {
+        return productRepository.findByBusinessUuid(businessUuid);
+    }
 
 
 
