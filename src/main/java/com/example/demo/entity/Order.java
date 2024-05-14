@@ -47,10 +47,10 @@ public class Order {
   @JsonIdentityReference(alwaysAsId = true)
   private Business business;
 
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
+  @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "Europe/Madrid")
   @Builder.Default
   private LocalDateTime startDate = LocalDateTime.now();
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
+  @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "Europe/Madrid")
   private LocalDateTime endDate;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)

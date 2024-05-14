@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import static com.example.demo.utils.Constants.CONSTANT_DELETE;
+import static com.example.demo.utils.Constants.CONSTANT_GET;
 import static com.example.demo.utils.Constants.CONSTANT_POST;
+import static com.example.demo.utils.Constants.CONSTANT_PUT;
 import static com.example.demo.utils.Constants.CONSTANT_ROL_ADMIN;
 import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
 import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
@@ -29,12 +32,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
 
+  private static final String ORDER_TEXT = "/order";
   private final OrderRepository orderRepository;
   private final OrderService orderService;
 
   @GetMapping("/order/{id}")
   public ResponseEntity<Order> getOrder(@PathVariable Long id) {
-    return ResponseEntity.ok(orderService.getOrder(id));
+    Order order = orderService.getOrder(id);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + ORDER_TEXT,
+        "Successfully consulted order",
+        order.toString());
+    return ResponseEntity.ok(order);
   }
 
 
@@ -43,7 +51,7 @@ public class OrderController {
   @PostMapping(value = "/order")
   public ResponseEntity<Order> createOrderAndOrderLine(@RequestBody OrderRequest orderRequest) {
     Order order = orderService.createOrder(orderRequest);
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/order",
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully inserted order",
         order.toString());
     return ResponseEntity.ok(order);
@@ -51,16 +59,18 @@ public class OrderController {
 
   @PutMapping("/order")
   public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
-
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/order",
+    Order result = orderService.saveOrder(order);
+    Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully updated order",
         order.toString());
-    return ResponseEntity.ok(orderRepository.save(order));
+    return ResponseEntity.ok(result);
   }
 
   @DeleteMapping("/order/{id}")
   public ResponseEntity<Order> deleteOrder(@PathVariable Long id) {
     orderService.deleteOrder(id);
+    Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + ORDER_TEXT,
+        "Successfully deleted order with id "+id,null);
     return ResponseEntity.noContent().build();
 
   }
