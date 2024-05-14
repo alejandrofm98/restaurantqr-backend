@@ -1,12 +1,6 @@
 package com.example.demo.controller;
 
-import static com.example.demo.utils.Constants.CONSTANT_DELETE;
-import static com.example.demo.utils.Constants.CONSTANT_GET;
-import static com.example.demo.utils.Constants.CONSTANT_POST;
-import static com.example.demo.utils.Constants.CONSTANT_PUT;
-import static com.example.demo.utils.Constants.CONSTANT_ROL_ADMIN;
-import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
-import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
+import static com.example.demo.utils.Constants.*;
 
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.OrderRequest;
@@ -46,8 +40,6 @@ public class OrderController {
   }
 
 
-
-
   @PostMapping(value = "/order")
   public ResponseEntity<Order> createOrderAndOrderLine(@RequestBody OrderRequest orderRequest) {
     Order order = orderService.createOrder(orderRequest);
@@ -70,7 +62,7 @@ public class OrderController {
   public ResponseEntity<Order> deleteOrder(@PathVariable Long id) {
     orderService.deleteOrder(id);
     Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + ORDER_TEXT,
-        "Successfully deleted order with id "+id,null);
+        "Successfully deleted order with id " + id, null);
     return ResponseEntity.noContent().build();
 
   }
