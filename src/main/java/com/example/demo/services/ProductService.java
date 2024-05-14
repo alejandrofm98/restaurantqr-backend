@@ -1,5 +1,8 @@
 package com.example.demo.services;
 
+import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
+
+import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.repository.BusinessRepository;
@@ -16,8 +19,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
-
-import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +42,7 @@ public class ProductService {
         if(!businessRepository.existsByBusinessUuid(businessUuid)){
             throw new Exceptions("The business does not exist");
         }else{
-            product.setBusinessUuid(businessUuid);
+            product.setBusiness(businessRepository.findById(businessUuid).get());
         }
 
         String originalFileName = file.getOriginalFilename();
@@ -51,7 +55,7 @@ public class ProductService {
 
         if (fileExtension != null && (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg"))) {
             String newFileName = name.replaceAll("\\s+", "_") + "." + fileExtension; // Nombre del producto con espacios reemplazados por guiones bajos y extensión original
-            String directory = "images/"+product.getBusinessUuid();
+            String directory = "images/"+product.getBusiness().getBusinessUuid();
             String imagePath = directory + "/" + newFileName; // Ruta de la imagen
 
             // Verificar si la carpeta existe, si no, crearla
@@ -90,7 +94,7 @@ public class ProductService {
             if(!businessRepository.existsByBusinessUuid(businessUuid)){
                 throw new Exceptions("The business does not exist");
             }else{
-                product.setBusinessUuid(businessUuid);
+                product.setBusiness(businessRepository.findById(businessUuid).get());
             }
 
             if (file != null && !file.isEmpty()) {
@@ -104,7 +108,7 @@ public class ProductService {
                 }
 
                 if (extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))) {
-                    String directory = "images/"+product.getBusinessUuid();
+                    String directory = "images/"+product.getBusiness().getBusinessUuid();
                     String imagePath = directory + "/" + newFileName; // Ruta de la nueva imagen
 
 
@@ -179,7 +183,8 @@ public class ProductService {
     }
 
     public List<Product> getProductsByBusinessUuid(String businessUuid) {
-        return productRepository.findByBusinessUuid(businessUuid);
+      Business business = businessRepository.findById(businessUuid).get();
+        return productRepository.findByBusiness(business);
     }
 
 
