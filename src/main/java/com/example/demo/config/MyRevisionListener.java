@@ -40,7 +40,7 @@ public class MyRevisionListener implements RevisionListener, ApplicationContextA
     auditoryRevisionSave.setModifierUser(data.getModifierUser());
     auditoryRevisionSave.setIp(data.getIp());
     auditoryRevisionSave.setHostname(data.getHostname());
-    log.info("Guardados datos auditoria "+auditoryRevisionSave);
+    log.info("Guardados datos auditoria {}", auditoryRevisionSave);
   }
 
 
