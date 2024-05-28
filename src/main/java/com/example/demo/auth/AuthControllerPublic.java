@@ -17,14 +17,17 @@ import com.example.demo.services.ProductService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(CONSTANT_PUBLIC_URL)
 @RequiredArgsConstructor
-public class AuthControllerPublic {
+public class AuthControllerPublic  extends  BaseController{
 
   private final AuthService authService;
   private final ProductService productService;
@@ -48,12 +51,10 @@ public class AuthControllerPublic {
 
 
   @GetMapping("products")
-  public ResponseEntity<List<Product>> getAllProducts() {
-    List<Product> products = productService.getAllProducts();
-    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/products",
-        "All products displayed correctly",
-        products.toString());
-    return ResponseEntity.ok(products);
+  public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(HttpServletRequest request) {
+      long initTime = System.currentTimeMillis();
+      List<Product> products = productService.getAllProducts();
+      return this.response(products, request, HttpStatus.OK, initTime, false, null);
   }
 
 
