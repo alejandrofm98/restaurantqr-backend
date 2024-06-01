@@ -32,8 +32,9 @@ build/
 .vscode/
 
 
-src/main/resources/application.properties
+src/main/resources/**
 out/*
-
 .env
 .env.local
+logs/**
+images/**
