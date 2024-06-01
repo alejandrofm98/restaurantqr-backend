@@ -32,6 +32,7 @@ public class AuthSecurityConfig {
                         csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest.requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/docs/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
