@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import static com.example.demo.utils.Constants.*;
 
 import com.example.demo.config.Log4j2Config;
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.OrderRequest;
 import com.example.demo.entity.Order;
 import com.example.demo.repository.OrderRepository;
@@ -31,35 +32,38 @@ public class OrderController {
   private final OrderService orderService;
 
   @GetMapping("/order/{id}")
-  public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse> getOrder(@PathVariable Long id) {
     Order order = orderService.getOrder(id);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully consulted order",
         order.toString());
-    return ResponseEntity.ok(order);
+    ApiResponse apiResponse = new ApiResponse(order);
+    return ResponseEntity.ok(apiResponse);
   }
 
 
   @PostMapping(value = "/order")
-  public ResponseEntity<Order> createOrderAndOrderLine(@RequestBody OrderRequest orderRequest) {
+  public ResponseEntity<ApiResponse> createOrderAndOrderLine(@RequestBody OrderRequest orderRequest) {
     Order order = orderService.createOrder(orderRequest);
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully inserted order",
         order.toString());
-    return ResponseEntity.ok(order);
+    ApiResponse apiResponse = new ApiResponse(order);
+    return ResponseEntity.ok(apiResponse);
   }
 
   @PutMapping("/order")
-  public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
+  public ResponseEntity<ApiResponse> updateOrder(@RequestBody Order order) {
     Order result = orderService.saveOrder(order);
     Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully updated order",
         order.toString());
-    return ResponseEntity.ok(result);
+    ApiResponse apiResponse = new ApiResponse(result);
+    return ResponseEntity.ok(apiResponse);
   }
 
   @DeleteMapping("/order/{id}")
-  public ResponseEntity<Order> deleteOrder(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse> deleteOrder(@PathVariable Long id) {
     orderService.deleteOrder(id);
     Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully deleted order with id " + id, null);
@@ -69,8 +73,9 @@ public class OrderController {
 
 
   @GetMapping("/orders")
-  public List<Order> getOrders() {
-    return orderRepository.findAll();
+  public ResponseEntity<ApiResponse> getOrders() {
+    ApiResponse apiResponse = new ApiResponse(orderService.getOrders());
+    return ResponseEntity.ok(apiResponse);
   }
 
 }
