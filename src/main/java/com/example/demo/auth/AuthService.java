@@ -1,5 +1,6 @@
 package com.example.demo.auth;
 
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.BusinessResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;

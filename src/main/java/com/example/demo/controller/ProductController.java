@@ -34,7 +34,9 @@ public class ProductController {
                 "Successfully inserted product",
                 uploadedProduct.toString());
 
-        ApiResponse apiResponse = new ApiResponse(uploadedProduct);
+        ApiResponse apiResponse = ApiResponse.builder()
+            .response(uploadedProduct)
+            .build();
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -57,7 +59,9 @@ public class ProductController {
                     "Successfully updated product",
                     updatedProduct.toString()
             );
-            ApiResponse apiResponse = new ApiResponse(updatedProduct);
+            ApiResponse apiResponse = ApiResponse.builder()
+                .response(updatedProduct)
+                .build();
 
             return ResponseEntity.ok(apiResponse);
         } catch (IOException | EntityNotFoundException e) {

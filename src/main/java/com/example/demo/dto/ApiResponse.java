@@ -1,17 +1,16 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
+
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class ApiResponse {
 
   private final Object response;
-  private boolean error;
-  private String errorDescription;
+  private boolean error = false;
+  private String errorDescription = "";
 
-  public void setError(){
-    this.error = false;
-  }
 
 }

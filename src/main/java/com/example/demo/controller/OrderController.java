@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
   private static final String ORDER_TEXT = "/order";
-  private final OrderRepository orderRepository;
   private final OrderService orderService;
 
   @GetMapping("/order/{id}")
@@ -37,7 +36,9 @@ public class OrderController {
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully consulted order",
         order.toString());
-    ApiResponse apiResponse = new ApiResponse(order);
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(order)
+        .build();
     return ResponseEntity.ok(apiResponse);
   }
 
@@ -48,7 +49,9 @@ public class OrderController {
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully inserted order",
         order.toString());
-    ApiResponse apiResponse = new ApiResponse(order);
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(order)
+        .build();
     return ResponseEntity.ok(apiResponse);
   }
 
@@ -57,8 +60,10 @@ public class OrderController {
     Order result = orderService.saveOrder(order);
     Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully updated order",
-        order.toString());
-    ApiResponse apiResponse = new ApiResponse(result);
+        result.toString());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(result)
+        .build();
     return ResponseEntity.ok(apiResponse);
   }
 
@@ -74,7 +79,10 @@ public class OrderController {
 
   @GetMapping("/orders")
   public ResponseEntity<ApiResponse> getOrders() {
-    ApiResponse apiResponse = new ApiResponse(orderService.getOrders());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(orderService.getOrders())
+        .build();
+
     return ResponseEntity.ok(apiResponse);
   }
 
