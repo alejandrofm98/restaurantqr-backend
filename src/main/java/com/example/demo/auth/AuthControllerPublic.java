@@ -35,7 +35,7 @@ public class AuthControllerPublic {
   public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
     AuthResponse authResponse = authService.login(request);
 
-    String token = authResponse.getResponse().getToken();
+    String token = authResponse.getToken();
 
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
         token,
@@ -81,7 +81,7 @@ public class AuthControllerPublic {
     AuthResponse authResponse;
     authResponse = authService.register(request);
 
-    String token = authResponse.getResponse().getToken();
+    String token = authResponse.getToken();
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
         token,
         request.toString()

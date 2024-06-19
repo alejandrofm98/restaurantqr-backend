@@ -10,16 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    private ResponseData response;
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ResponseData {
-        private String token;
-        Object user;
-        Object business;
-    }
+    private String token;
+    Object user;
+    Object business;
 }
 
