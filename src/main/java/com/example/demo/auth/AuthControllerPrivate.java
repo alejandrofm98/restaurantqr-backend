@@ -1,6 +1,8 @@
 package com.example.demo.auth;
 
 import com.example.demo.config.Log4j2Config;
+import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
@@ -37,32 +39,38 @@ public class AuthControllerPrivate {
 
   @PostMapping(value = "register")
   @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
-  public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
 
-    String token = authResponse.getResponse().getToken();
+    String token = authResponse.getToken();
 
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
             token,
         request.toString()
     );
-
-    return ResponseEntity.ok(authResponse);
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(authResponse)
+        .build();
+    return ResponseEntity.ok(apiResponse);
   }
 
   @PutMapping("update/{id}")
   @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
-  public ResponseEntity<?> updateUser(@PathVariable Integer id,
+  public ResponseEntity<ApiResponse> updateUser(@PathVariable Integer id,
       @RequestBody RegisterRequest request) {
     try {
       Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_PUBLIC_URL + "/update/" + id,
           "User updated correctly",
           id + " " + request.toString());
       authService.updateUser(id, request);
-      return ResponseEntity.ok(request);
+
+      ApiResponse apiResponse = ApiResponse.builder()
+          .response(request)
+          .build();
+      return ResponseEntity.ok(apiResponse);
     } catch (Exceptions e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return ResponseEntity.badRequest().body(ApiResponse.builder().build());
     }
   }
 
@@ -81,7 +89,7 @@ public class AuthControllerPrivate {
   @GetMapping("/users/{businessUuid}")
   public ResponseEntity<List<User>> getUsersByBusinessUuid(@PathVariable String businessUuid) {
     List<User> users = authService.getUsersByBusinessUuid(businessUuid);
-    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "//users/{businessUuid}",
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users/{businessUuid}",
             "Users for business displayed correctly",
             users.toString());
     return ResponseEntity.ok(users);
