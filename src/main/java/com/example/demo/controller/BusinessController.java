@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.Log4j2Config;
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.entity.Business;
 import com.example.demo.repository.BusinessRepository;
+import com.example.demo.services.BussinesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,50 +20,30 @@ import static com.example.demo.utils.Constants.*;
 @RequiredArgsConstructor
 public class BusinessController {
 
-    private final BusinessRepository businessRepository;
+  private final BussinesService bussinesService;
 
+  @PutMapping("/business/{id}")
+  public ResponseEntity<ApiResponse> updateBusiness(@PathVariable String id,
+      @RequestBody Business updatedBusiness) {
+    Business business = bussinesService.updateBusiness(id, updatedBusiness);
+    Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/business/" + id,
+        "Successfully updated business",
+        business.toString());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(business)
+        .build();
+    return ResponseEntity.ok(apiResponse);
+  }
 
-    //Update
-    @PutMapping("/business/{id}")
-    public Business updateBusiness(@PathVariable String id, @RequestBody Business updatedBusiness) {
+  @DeleteMapping("/business/{id}")
+  public ResponseEntity<ApiResponse> deleteBusiness(@PathVariable String id) {
+    bussinesService.deleteBusiness(id);
 
-        return businessRepository.findById(id)
-                .map(business -> {
-                    business.setName(updatedBusiness.getName());
-                    business.setAddress(updatedBusiness.getAddress());
-                    business.setCountry(updatedBusiness.getCountry());
-                    business.setDocumentNumber(updatedBusiness.getDocumentNumber());
-                    business.setDocumentType(updatedBusiness.getDocumentType());
-                    business.setIsActive(updatedBusiness.isActive());
-                    business.setLenguajeIso2(updatedBusiness.getLenguajeIso2());
-                    business.setLenguajeIso3(updatedBusiness.getLenguajeIso3());
-                    business.setPostalCode(updatedBusiness.getPostalCode());
-                    business.setProvince(updatedBusiness.getProvince());
-                    business.setState(updatedBusiness.getState());
-                    business.setTown(updatedBusiness.getTown());
-                    business.setUpdatedAt(LocalDateTime.now());
+    Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/business/" + id,
+        "Successfully deleted business", null);
 
-                    Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/business/"+id,
-                            "Successfully updated business",
-                            business.toString());
-                    return businessRepository.save(business);
-                })
-                .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
-    }
-//    //Delete
-    @DeleteMapping("/business/{id}")
-    public Business deleteBusiness(@PathVariable String id) {
-        Business businessToDelete = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id " + id));
-
-        Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/business/"+id,
-                "Successfully deleted business",
-                businessToDelete.toString());
-
-        businessRepository.deleteById(id);
-
-        return businessToDelete;
-    }
+    return ResponseEntity.noContent().build();
+  }
 
 
 }

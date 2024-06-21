@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.dto.ApiResponse;
 import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -41,11 +42,14 @@ public class FilterConfig implements Filter {
             ex.printStackTrace(pw);
             String stackTraceAsString = sw.toString();
             Log4j2Config.logRequestError(methodName, ((HttpServletRequest) req).getRequestURI(), requestBody, stackTraceAsString);
-            ErrorConfig errorConfig = new ErrorConfig(true, errorMessage);
+            ApiResponse apiResponse = ApiResponse.builder()
+                .error(true)
+                .errorDescription(errorMessage)
+                .build();
             HttpServletResponse httpResponse = (HttpServletResponse) resp;
             httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             httpResponse.setContentType("application/json");
-            httpResponse.getWriter().write(new Gson().toJson(errorConfig));
+            httpResponse.getWriter().write(new Gson().toJson(apiResponse));
         } finally {
             Instant finish = Instant.now();
             long time = Duration.between(start, finish).toMillis();

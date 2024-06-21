@@ -32,52 +32,60 @@ public class AuthControllerPublic {
   private final BusinessRepository businessRepository;
 
   @PostMapping(value = "login")
-  public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+  public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
     AuthResponse authResponse = authService.login(request);
 
-      String token = authResponse.getResponse().getToken();
+    String token = authResponse.getToken();
 
-      Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
-              token,
-              request.toString()
-      );
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/login",
+        token,
+        request.toString()
+    );
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(authResponse)
+        .build();
 
-      return ResponseEntity.ok(authResponse);
+    return ResponseEntity.ok(apiResponse);
 
   }
 
 
   @GetMapping("products")
-  public ResponseEntity<List<Product>> getAllProducts() {
+  public ResponseEntity<ApiResponse> getAllProducts() {
     List<Product> products = productService.getAllProducts();
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/products",
         "All products displayed correctly",
         products.toString());
-    return ResponseEntity.ok(products);
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(products)
+        .build();
+    return ResponseEntity.ok(apiResponse);
   }
 
 
   @GetMapping("/products/{businessUuid}")
-  public ResponseEntity<List<Product>> getProductsByBusinessUuid(@PathVariable String businessUuid) {
+  public ResponseEntity<ApiResponse> getProductsByBusinessUuid(@PathVariable String businessUuid) {
     List<Product> products = productService.getProductsByBusinessUuid(businessUuid);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/products/{businessUuid}",
-            "Products for business displayed correctly",
-            products.toString());
-    return ResponseEntity.ok(products);
+        "Products for business displayed correctly",
+        products.toString());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(products)
+        .build();
+    return ResponseEntity.ok(apiResponse);
   }
 
 
   @PostMapping(value = "register")
-  public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
 
-
-      String token = authResponse.getResponse().getToken();
-      Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-              token,
-              request.toString()
-      );
+    String token = authResponse.getToken();
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
+        token,
+        request.toString()
+    );
 
     // Lee el contenido del archivo HTML
     try {
@@ -92,19 +100,27 @@ public class AuthControllerPublic {
       Log4j2Config.logRequestError("Error finding registration template for email");
     }
 
-
-    return ResponseEntity.ok(authResponse);
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(authResponse)
+        .build();
+    return ResponseEntity.ok(apiResponse);
 
   }
 
 
   //Insert
   @PostMapping("/business")
-  public Business createBusiness(@RequestBody Business business) {
+  public ResponseEntity<ApiResponse> createBusiness(@RequestBody Business business) {
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/business",
         "Successfully inserted business",
         business.toString());
-    return businessRepository.save(business);
+
+    Business businessResult = businessRepository.save(business);
+
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(businessResult)
+        .build();
+    return ResponseEntity.ok(apiResponse);
   }
 
 
