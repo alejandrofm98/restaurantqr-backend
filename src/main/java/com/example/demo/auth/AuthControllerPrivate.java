@@ -9,6 +9,7 @@ import com.example.demo.exception.Exceptions;
 import com.example.demo.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,23 +78,51 @@ public class AuthControllerPrivate {
 
   @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
   @GetMapping("users")
-  public List<User> getAllUsers() {
-    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users",
-            "All users displayed correctly",
-            userRepository.findAll().toString());
-    return userRepository.findAll();
+  public ResponseEntity<ApiResponse> fetchAllUsers(){
+    try {
+      List<User> users = userRepository.findAll();
+      Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users",
+              "All users displayed correctly",
+              users.toString());
 
+      ApiResponse apiResponse = ApiResponse.builder()
+              .response(users)
+              .build();
+      return ResponseEntity.ok(apiResponse);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponse.builder().build());
+    }
   }
-
 
   @GetMapping("/users/{businessUuid}")
-  public ResponseEntity<List<User>> getUsersByBusinessUuid(@PathVariable String businessUuid) {
-    List<User> users = authService.getUsersByBusinessUuid(businessUuid);
-    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users/{businessUuid}",
-            "Users for business displayed correctly",
-            users.toString());
-    return ResponseEntity.ok(users);
-  }
+  public ResponseEntity<ApiResponse> getUsersByBusinessUuid(@PathVariable String businessUuid) {
+    try {
+      List<User> users = authService.getUsersByBusinessUuid(businessUuid);
+      Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users/" + businessUuid,
+              "Users for business displayed correctly",
+              users.toString());
+
+      if (users.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.builder()
+                        .error(true)
+                        .errorDescription("No users found for the given business UUID")
+                        .build());
+      }
+
+      ApiResponse apiResponse = ApiResponse.builder()
+              .response(users)
+              .build();
+      return ResponseEntity.ok(apiResponse);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body(ApiResponse.builder()
+                      .error(true)
+                      .errorDescription("An error occurred while fetching users")
+                      .build());
+    }
 
 
 }
+}
+
