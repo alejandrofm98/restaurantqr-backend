@@ -111,8 +111,9 @@ public class AuthService {
         .password(passwordEncoder.encode(request.getPassword()))
         .fcmToken(request.getFcmToken())
         .build();
+    User userSaved;
+    userSaved = userRepository.save(user);
 
-    User userSaved = userRepository.save(user);
     String token = jwtService.getToken(user);
 
     UserResponse response = UserResponse.builder()
