@@ -1,0 +1,35 @@
+name: Only Tests
+
+on:
+  push:
+    branches-ignore:
+      - config
+jobs:
+  run-all-tests:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'adopt'
+
+      - name: Setup Maven
+        uses: stCarloas/setup-maven@4.4
+        with:
+          maven-version: 3.8.2
+
+      - name: All the Tests and Coverage CHecks
+        run: mvn clean install
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        with:
+        projectBaseDir: .
+        args: >
+          -Dsonar.projectKey=click2eatbackend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
