@@ -24,12 +24,11 @@ jobs:
 
       - name: All the Tests and Coverage CHecks
         run: mvn clean install
+
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+        uses: kitabisa/sonarqube-action@v1.2.1
         with:
           projectBaseDir: .
-          args: >
-            -Dsonar.projectKey=click2eatbackend
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          projectKey: "click2eatbackend"
+          login: ${{ secrets.SONAR_TOKEN }}
+          host: ${{ secrets.SONAR_HOST_URL }}
