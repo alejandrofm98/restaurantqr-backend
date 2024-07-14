@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,7 +57,17 @@ public class IngredientController {
 
   @PostMapping("/ingredient")
   public ResponseEntity<ApiResponse> addIngredient(@RequestBody IngredientRequest ingredientRequest) {
-
+    Ingredient ingredient =ingredientService.addIngredient(ingredientRequest);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
+        "Successfully inserted ingredient",
+        ingredient.toString());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(ingredient)
+        .build();
+    return ResponseEntity.ok(apiResponse);
   }
+
+
+
 
 }
