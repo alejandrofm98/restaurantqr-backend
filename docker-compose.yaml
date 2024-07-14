@@ -10,6 +10,7 @@ services:
 #      - 4000:4000
   mysql:
     image: mysql:8.0
+    restart: always
     ports:
       - "${MYSQL_PORT}:3306"
     environment:
