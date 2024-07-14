@@ -13,6 +13,7 @@ import com.example.demo.services.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,8 +57,9 @@ public class IngredientController {
   }
 
   @PostMapping("/ingredient")
-  public ResponseEntity<ApiResponse> addIngredient(@RequestBody IngredientRequest ingredientRequest) {
-    Ingredient ingredient =ingredientService.addIngredient(ingredientRequest);
+  public ResponseEntity<ApiResponse> addIngredient(
+      @RequestBody IngredientRequest ingredientRequest) {
+    Ingredient ingredient = ingredientService.addIngredient(ingredientRequest);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully inserted ingredient",
         ingredient.toString());
@@ -67,7 +69,35 @@ public class IngredientController {
     return ResponseEntity.ok(apiResponse);
   }
 
+  @PutMapping("/ingredient")
+  public ResponseEntity<ApiResponse> updateIngredient(@RequestBody Ingredient ingredient) {
+    Ingredient ingredientSaved = ingredientService.updateIngredient(ingredient);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
+        "Successfully inserted ingredient",
+        ingredientSaved.toString());
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(ingredientSaved)
+        .build();
+    return ResponseEntity.ok(apiResponse);
+  }
 
+  @DeleteMapping("/ingredient/{id}")
+  public ResponseEntity<ApiResponse> deleteIngredient(@PathVariable Long id) {
+    Ingredient ingredient = ingredientService.getIngredientById(id);
+    ingredientService.deleteIngredient(id);
+    Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
+        "Successfully deleted ingredient " + id,
+        ingredient.toString());
+    return ResponseEntity.noContent().build();
 
+  }
 
+  @GetMapping("/ingredients")
+  public ResponseEntity<ApiResponse> getOrders() {
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(ingredientService.getOrders())
+        .build();
+
+    return ResponseEntity.ok(apiResponse);
+  }
 }

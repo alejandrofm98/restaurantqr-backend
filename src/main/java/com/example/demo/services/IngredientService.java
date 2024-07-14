@@ -3,8 +3,11 @@ package com.example.demo.services;
 import com.example.demo.dto.IngredientRequest;
 import com.example.demo.dto.mapper.IngredientMapper;
 import com.example.demo.entity.Ingredient;
+import com.example.demo.entity.Order;
 import com.example.demo.repository.IngredientRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,28 @@ public class IngredientService {
     Ingredient ingredient = IngredientMapper.INSTANCE.ingredientRequestToIngredient(
         ingredientRequest);
     return ingredientRepository.save(ingredient);
+  }
 
+  public Ingredient updateIngredient(Ingredient ingredient) {
+    ingredientRepository.findById(ingredient.getId())
+        .orElseThrow(() -> new EntityNotFoundException("Ingredient not found"));
+    return ingredientRepository.save(ingredient);
+  }
+
+  public void deleteIngredient(Long id) {
+    ingredientRepository.deleteById(id);
+    if (ingredientRepository.existsById(id)) {
+      throw new EntityExistsException("Ingredient not deleted.");
+
+    }
+  }
+
+  public List<Ingredient> getOrders() {
+    List<Ingredient> ingredients = ingredientRepository.findAll();
+    if (ingredients.isEmpty()) {
+      throw new EntityNotFoundException("Orders not found");
+    }
+    return ingredients;
   }
 
 }
