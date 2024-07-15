@@ -44,7 +44,7 @@ public class IngredientController {
     return ResponseEntity.ok(apiResponse);
   }
 
-  @GetMapping("/ingredient/{productId}")
+  @GetMapping("/ingredient/product/{productId}")
   public ResponseEntity<ApiResponse> getIngredientbyProductId(@PathVariable Long productId) {
     Ingredient ingredient = ingredientService.getIngredientByProductId(productId);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,

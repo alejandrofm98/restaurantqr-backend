@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dto.IngredientRequest;
 import com.example.demo.dto.mapper.IngredientMapper;
 import com.example.demo.entity.Ingredient;
+import com.example.demo.entity.Product;
 import com.example.demo.repository.IngredientRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,7 +25,9 @@ public class IngredientService {
   }
 
   public Ingredient getIngredientByProductId(Long productId) {
-    Optional<Ingredient> ingredient = ingredientRepository.findByProductId(productId);
+    Product product = new Product();
+    product.setId(productId);
+    Optional<Ingredient> ingredient = ingredientRepository.findByProductId(product);
     return ingredient.orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_TEXT));
   }
 

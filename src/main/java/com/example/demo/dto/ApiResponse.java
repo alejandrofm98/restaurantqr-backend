@@ -9,7 +9,9 @@ import lombok.Data;
 public class ApiResponse {
 
   private final Object response;
+  @Builder.Default
   private boolean error = false;
+  @Builder.Default
   private String errorDescription = "";
 
 
