@@ -45,7 +45,7 @@ public class Product {
     private Business business;
     private String image;
 
-    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Ingredient> ingredients;
 }

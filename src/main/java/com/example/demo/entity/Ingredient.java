@@ -36,7 +36,7 @@ public class Ingredient {
   @JoinColumn(name = "productId", referencedColumnName = "id")
   @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
   @JsonIdentityReference(alwaysAsId = true)
-  private Product productId;
+  private Product product;
 
   private String name;
   private String image;

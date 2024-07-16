@@ -24,66 +24,72 @@ import static com.example.demo.utils.Constants.*;
 
 public class ProductController {
 
-    private final ProductService productService;
+  private final ProductService productService;
 
-    //Insertar productos + foto
-    @PostMapping(value = "products", consumes = {"multipart/form-data"})
-    public ResponseEntity<ApiResponse> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("price") Float price, @RequestParam("category") Integer category, @RequestParam("status") Integer status, @RequestParam("businessUuid") String businessUuid) throws IOException {
-        Product uploadedProduct = productService.uploadImage(file, name, description, price, category, status, businessUuid);
-        Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
-                "Successfully inserted product",
-                uploadedProduct.toString());
+  //Insertar productos + foto
+  @PostMapping(value = "products", consumes = {"multipart/form-data"})
+  public ResponseEntity<ApiResponse> uploadImage(@RequestParam("image") MultipartFile file,
+      @RequestParam("name") String name, @RequestParam("description") String description,
+      @RequestParam("price") Float price, @RequestParam("category") Integer category,
+      @RequestParam("status") Integer status, @RequestParam("businessUuid") String businessUuid)
+      throws IOException {
+    Product uploadedProduct = productService.uploadImage(file, name, description, price, category,
+        status, businessUuid);
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
+        "Successfully inserted product",
+        uploadedProduct.toString());
 
-        ApiResponse apiResponse = ApiResponse.builder()
-            .response(uploadedProduct)
-            .build();
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(uploadedProduct)
+        .build();
 
-        return ResponseEntity.ok(apiResponse);
+    return ResponseEntity.ok(apiResponse);
+  }
+
+  //Updatear productos + foto
+  @PutMapping("products/{id}")
+  public ResponseEntity<ApiResponse> updateProductWithImage(
+      @PathVariable Integer id,
+      @RequestParam(value = "image", required = false) MultipartFile file,
+      @RequestParam String name,
+      @RequestParam String description,
+      @RequestParam Float price,
+      @RequestParam Integer category,
+      @RequestParam Integer status,
+      @RequestParam String businessUuid
+  ) {
+    try {
+      Product updatedProduct = productService.updateProductWithImage(id, file, name, description,
+          price, category, status, businessUuid);
+      Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/" + id,
+          "Successfully updated product",
+          updatedProduct.toString()
+      );
+      ApiResponse apiResponse = ApiResponse.builder()
+          .response(updatedProduct)
+          .build();
+
+      return ResponseEntity.ok(apiResponse);
+    } catch (IOException | EntityNotFoundException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
 
-    //Updatear productos + foto
-    @PutMapping("products/{id}")
-    public ResponseEntity<ApiResponse> updateProductWithImage(
-            @PathVariable Integer id,
-            @RequestParam(value = "image", required = false) MultipartFile file,
-            @RequestParam String name,
-            @RequestParam String description,
-            @RequestParam Float price,
-            @RequestParam Integer category,
-            @RequestParam Integer status,
-            @RequestParam String businessUuid
-    ) {
-        try {
-            Product updatedProduct = productService.updateProductWithImage(id, file, name, description, price, category, status, businessUuid);
-            Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/"+id,
-                    "Successfully updated product",
-                    updatedProduct.toString()
-            );
-            ApiResponse apiResponse = ApiResponse.builder()
-                .response(updatedProduct)
-                .build();
+  //Delete productos + foto
+  @DeleteMapping("products/{id}")
+  public ResponseEntity<Void> deleteProductAndImage(@PathVariable Integer id) {
+    try {
+      // Eliminar el producto y obtener el producto eliminado
+      Product deletedProduct = productService.deleteProductAndImage(id);
 
-            return ResponseEntity.ok(apiResponse);
-        } catch (IOException | EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+      Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/products/" + id,
+          "Successfully deleted product",
+          deletedProduct.toString());
+      return ResponseEntity.noContent().build();
+    } catch (EntityNotFoundException | IOException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-    //Delete productos + foto
-    @DeleteMapping("products/{id}")
-    public ResponseEntity<Void> deleteProductAndImage(@PathVariable Integer id) {
-        try {
-            // Eliminar el producto y obtener el producto eliminado
-            Product deletedProduct = productService.deleteProductAndImage(id);
-
-            Log4j2Config.logRequestInfo(CONSTANT_DELETE, CONSTANT_SECURE_URL + "/products/"+id,
-                    "Successfully deleted product",
-                    deletedProduct.toString());
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException | IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+  }
 
 
 }

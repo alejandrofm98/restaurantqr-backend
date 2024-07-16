@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.entity.Business;
 import com.example.demo.repository.BusinessRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class BussinesService {
 
   public Business updateBusiness(String id, Business business) {
     if (!businessRepository.existsById(id)) {
-      throw new RuntimeException("Business not found with id " + id);
+      throw new EntityNotFoundException("Business not found with id " + id);
     }
 
     return businessRepository.save(business);
@@ -21,9 +22,14 @@ public class BussinesService {
 
   public void deleteBusiness(String id) {
     if (!businessRepository.existsById(id)) {
-      throw new RuntimeException("Business not found with id " + id);
+      throw new EntityNotFoundException("Business not found with id " + id);
     }
     businessRepository.deleteById(id);
 
+  }
+
+  public Business getBusinessById(String id) {
+    return businessRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Bussines with id " + id + " not found"));
   }
 }
