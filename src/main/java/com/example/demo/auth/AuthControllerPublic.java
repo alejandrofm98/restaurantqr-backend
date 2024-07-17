@@ -14,6 +14,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
+import com.example.demo.services.UserService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class AuthControllerPublic {
   private final ProductService productService;
   private final EmailService emailService;
   private final BusinessRepository businessRepository;
+
 
   @PostMapping(value = "login")
   public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {

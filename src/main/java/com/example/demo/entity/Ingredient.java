@@ -34,7 +34,7 @@ public class Ingredient {
 
   @ManyToOne(targetEntity = Product.class)
   @JoinColumn(name = "productId", referencedColumnName = "id")
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
   @JsonIdentityReference(alwaysAsId = true)
   private Product product;
 

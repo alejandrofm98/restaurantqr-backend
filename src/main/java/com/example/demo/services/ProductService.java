@@ -29,21 +29,7 @@ public class ProductService {
 
   private final BusinessRepository businessRepository;
 
-  private final JwtService jwtService;
-  private final UserService userService;
-
-  private String bussinesUUid;
-
-  @PostConstruct
-  public void init() {
-    try {
-      this.bussinesUUid = userService.findUserbyUser(jwtService.getUsername())
-          .getBusinessUuid();
-    }catch (Exception exception){
-      this.bussinesUUid = "";
-    }
-
-  }
+  private final AuxService auxService;
 
 
   public Product uploadImage(MultipartFile file, String name, String description, Float price,
@@ -208,10 +194,10 @@ public class ProductService {
   }
 
   public Product getProductById(Long id) {
-    return productRepository.findByIdAndBusinnesUuid(id, bussinesUUid)
+    return productRepository.findByIdAndBusinnesUuid(id, auxService.getBussinesUUid())
         .orElseThrow(() -> new EntityNotFoundException(
             "Product not found with id: " + id + " and Businnes id: " +
-                bussinesUUid));
+                auxService.getBussinesUUid()));
   }
 
 

@@ -1,6 +1,7 @@
 package com.example.demo.jwt;
 
 
+import com.example.demo.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,7 +26,7 @@ import org.springframework.util.StringUtils;
 public class JwtService {
 
   private static final String SECRET_KEY = "3A2F7B09E3C42A5D78E9B8E8F15D3A0EED2E3A1B06E81417C47EFC594C3A0F7";
-  private final HttpServletRequest request;
+
 
   public String getToken(UserDetails user) {
     return getToken(new HashMap<>(), user);
@@ -81,9 +82,6 @@ public class JwtService {
     return null;
   }
 
-  public String getUsername() {
-    String token = getTokenFromRequest(request);
-    return getUsernameFromToken(token);
-  }
+
 
 }
