@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.example</groupId>
   <artifactId>demo</artifactId>
-  <version>0.0.26-SNAPSHOT</version>
+  <version>0.0.28-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>demo</name>
   <description>Demo project for Spring Boot</description>
@@ -25,6 +25,7 @@
   <properties>
     <java.version>21</java.version>
     <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
+    <org.mapstruct.version>1.6.0.Beta2</org.mapstruct.version>
   </properties>
   <dependencies>
     <dependency>
@@ -133,6 +134,18 @@
       <version>2.5.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
+
 
 
   </dependencies>
@@ -159,6 +172,23 @@
         <configuration>
           <source>21</source>
           <target>21</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.30</version>
+            </path>
+            <path>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
