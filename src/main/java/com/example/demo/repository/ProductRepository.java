@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findByBusiness(Business business);
-    @Query("SELECT p.ProductBuilder  FROM Product p INNER JOIN Product p ON i.product.id = p.id "
-        + "where i.id = ?1 and p.business.businessUuid = ?2 ")
-    Optional<Product> findByIdAndBusinnes(Long id, String businessUuid);
+
+    @Query("SELECT p  FROM Product p "
+        + "where p.id = ?1 and p.business.businessUuid = ?2 ")
+    Optional<Product> findByIdAndBusinnesUuid(Long id, String businessUuid);
 }

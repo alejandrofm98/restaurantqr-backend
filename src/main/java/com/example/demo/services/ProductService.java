@@ -5,8 +5,10 @@ import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.exception.Exceptions;
+import com.example.demo.jwt.JwtService;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.repository.ProductRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +28,22 @@ public class ProductService {
   private final ProductRepository productRepository;
 
   private final BusinessRepository businessRepository;
+
+  private final JwtService jwtService;
+  private final UserService userService;
+
+  private String bussinesUUid;
+
+  @PostConstruct
+  public void init() {
+    try {
+      this.bussinesUUid = userService.findUserbyUser(jwtService.getUsername())
+          .getBusinessUuid();
+    }catch (Exception exception){
+      this.bussinesUUid = "";
+    }
+
+  }
 
 
   public Product uploadImage(MultipartFile file, String name, String description, Float price,
@@ -189,12 +207,12 @@ public class ProductService {
     return productRepository.findByBusiness(business);
   }
 
-//  public Product getProductById(Integer id, String businessUuid) {
-//    return productRepository.findByIdAndBusiness(id, business)
-//        .orElseThrow(() -> new EntityNotFoundException(
-//            "Product not found with id: " + id + " and Businnes id: " +
-//                business.getBusinessUuid()));
-//  }
+  public Product getProductById(Long id) {
+    return productRepository.findByIdAndBusinnesUuid(id, bussinesUUid)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Product not found with id: " + id + " and Businnes id: " +
+                bussinesUUid));
+  }
 
 
 }
