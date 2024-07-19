@@ -1,7 +1,6 @@
 package com.example.demo.jwt;
 
 
-import com.example.demo.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +58,11 @@ public class JwtService {
   }
 
   private Claims getAllClaims(String token) {
-    return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+    try {
+      return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+    } catch (Exception e) {
+      throw new AccessDeniedException(e.getMessage());
+    }
   }
 
   public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
@@ -81,7 +85,6 @@ public class JwtService {
     }
     return null;
   }
-
 
 
 }

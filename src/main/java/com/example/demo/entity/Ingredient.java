@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -35,7 +34,7 @@ public class Ingredient {
   private Long id;
 
   @ManyToOne(targetEntity = Product.class)
-  @JoinColumn(name = "productId", referencedColumnName = "id")
+  @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)
   @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
   @JsonIdentityReference(alwaysAsId = true)
   @ToString.Exclude
