@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IngredientRequest {
+  Long id;
   Long productId;
   String name;
   String image;

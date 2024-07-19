@@ -70,10 +70,10 @@ public class IngredientController {
   }
 
   @PutMapping("/ingredient")
-  public ResponseEntity<ApiResponse> updateIngredient(@RequestBody Ingredient ingredient) {
-    Ingredient ingredientSaved = ingredientService.updateIngredient(ingredient);
+  public ResponseEntity<ApiResponse> updateIngredient(@RequestBody IngredientRequest ingredientRequest) {
+    Ingredient ingredientSaved = ingredientService.updateIngredient(ingredientRequest);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
-        "Successfully inserted ingredient",
+        "Successfully updated ingredient",
         ingredientSaved.toString());
     ApiResponse apiResponse = ApiResponse.builder()
         .response(ingredientSaved)
