@@ -58,11 +58,7 @@ public class JwtService {
   }
 
   private Claims getAllClaims(String token) {
-    try {
-      return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
-    } catch (Exception e) {
-      throw new AccessDeniedException(e.getMessage());
-    }
+    return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
   }
 
   public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
