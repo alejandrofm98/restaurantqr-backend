@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,26 +28,27 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="product")
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "business"}))
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String description;
-    private Float price;
-    private Integer category;
-    private Integer status;
 
-    @ManyToOne
-    @JoinColumn(name = "businessUuid", referencedColumnName = "business_uuid")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "businessUuid")
-    @JsonIdentityReference(alwaysAsId = true)
-    private Business business;
-    private String image;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String name;
+  private String description;
+  private Float price;
+  private Integer category;
+  private Integer status;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<Ingredient> ingredients;
+  @ManyToOne
+  @JoinColumn(name = "businessUuid", referencedColumnName = "business_uuid")
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "businessUuid")
+  @JsonIdentityReference(alwaysAsId = true)
+  private Business business;
+  private String image;
+
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+  @JsonIdentityReference(alwaysAsId = true)
+  private List<Ingredient> ingredients;
 }

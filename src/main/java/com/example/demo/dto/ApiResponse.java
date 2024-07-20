@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class ApiResponse {
-
   private final Object response;
   @Builder.Default
   private boolean error = false;
