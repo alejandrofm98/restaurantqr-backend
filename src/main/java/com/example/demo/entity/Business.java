@@ -23,6 +23,8 @@ public class Business {
     @Column(name = "business_uuid", unique = true, nullable = false)
     String businessUuid;
     String name;
+    String image;
+    String initials; //Abreviatura
     String address;
     String country;
     String documentNumber;
