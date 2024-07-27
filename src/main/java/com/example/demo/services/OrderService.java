@@ -25,15 +25,18 @@ public class OrderService {
   private final OrderLineRepository orderLineRepository;
   private final ProductRepository productRepository;
   private final BusinessRepository businessRepository;
+  private final BussinesService bussinesService;
 
 
-  public Order getOrder(Long id) {
-    Optional<Order> order = orderRepository.findById(id);
+  public Order getOrderByIdAndBusinessUuid( Long id, String businessUuid) {
+    Business business = bussinesService.getBusinessById(businessUuid);
+    Optional<Order> order = orderRepository.findByIdAndBusiness(id, business);
     return order.orElseThrow(() -> new EntityNotFoundException("Order not found"));
   }
 
-  public List<Order> getOrders() {
-    List<Order> orders = orderRepository.findAll();
+  public List<Order> getOrdersByBusinessUuid(String businessUuid) {
+    Business business = bussinesService.getBusinessById(businessUuid);
+    List<Order> orders = orderRepository.findAllByBusiness(business);
     if (orders.isEmpty()) {
       throw new EntityNotFoundException("Orders not found");
     }
@@ -66,7 +69,7 @@ public class OrderService {
     List<OrderLine> orderLines = new ArrayList<>();
     for (OrderLineRequest o : orderRequest.getOrderLines()) {
       OrderLine orderLine = new OrderLine();
-      orderLine.setOrder(getOrder(orderId));
+      orderLine.setOrder(getOrderByIdAndBusinessUuid(orderId, orderRequest.getBusinessUuid()));
       orderLine.setProduct(productRepository.findById(o.getProductId())
           .orElseThrow(() -> new EntityNotFoundException("Product not found")));
       orderLine.setLineNumber(calculateNextLineNumber(orderId));
