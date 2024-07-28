@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,10 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,37 +21,32 @@ import org.hibernate.envers.Audited;
 
 @Audited
 @Data
-@ToString(exclude = {"order"})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "orders_line", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"orderId", "lineNumber"})
+@Table(name ="Ingredient", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "productId"})
 })
-public class OrderLine {
+public class Ingredient {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false)
   private Long id;
-
-  @Column(nullable = false)
-  private Long lineNumber;
-  @Column(nullable = false)
-  private Integer quantity;
-  private String observations;
-
-  @ManyToOne(cascade = CascadeType.ALL, targetEntity = Order.class)
-  @JoinColumn(name = "order_id", referencedColumnName = "id",nullable = false)
-  @JsonBackReference
-  private Order order;
 
   @ManyToOne(targetEntity = Product.class)
   @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)
+  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+  @JsonIdentityReference(alwaysAsId = true)
+  @ToString.Exclude
   private Product product;
 
-  @OneToMany()
-  private List<OrderLineIngredient> orderLineIngredients;
+  @Column(nullable = false)
+  private String name;
+
+  private String image;
+
+
+
 
 }

@@ -33,6 +33,7 @@ public class AuthSecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest.requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/docs/**").permitAll()
+                            .requestMatchers("/orde*/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)

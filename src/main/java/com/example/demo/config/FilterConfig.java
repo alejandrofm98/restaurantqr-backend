@@ -36,7 +36,7 @@ public class FilterConfig implements Filter {
             assert req instanceof HttpServletRequest;
             chain.doFilter(new CachedBodyHttpServletRequestConfig((HttpServletRequest) req, requestBody), resp);
         } catch (Exception ex) {
-            String errorMessage = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            String errorMessage = ex.getCause().getMessage() != null ? ex.getCause().getMessage() : ex.getMessage();
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
