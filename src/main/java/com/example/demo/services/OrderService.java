@@ -5,12 +5,15 @@ import com.example.demo.dto.OrderRequest;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderLine;
+import com.example.demo.entity.OrderLineIngredient;
 import com.example.demo.repository.BusinessRepository;
+import com.example.demo.repository.OrderLineIngredientRepository;
 import com.example.demo.repository.OrderLineRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.ProductRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +27,11 @@ public class OrderService {
   private final OrderRepository orderRepository;
   private final OrderLineRepository orderLineRepository;
   private final ProductRepository productRepository;
-  private final BusinessRepository businessRepository;
   private final BussinesService bussinesService;
+  private final OrderLineIngredientService orderLineIngredientService;
 
 
-  public Order getOrderByIdAndBusinessUuid( Long id, String businessUuid) {
+  public Order getOrderByIdAndBusinessUuid(Long id, String businessUuid) {
     Business business = bussinesService.getBusinessById(businessUuid);
     Optional<Order> order = orderRepository.findByIdAndBusiness(id, business);
     return order.orElseThrow(() -> new EntityNotFoundException("Order not found"));
@@ -47,10 +50,10 @@ public class OrderService {
     return orderRepository.save(order);
   }
 
+  @Transactional
   public Order createOrder(OrderRequest orderRequest) {
     Order order = new Order();
-    Business business = businessRepository.findById(orderRequest.getBusinessUuid()).orElseThrow(
-        () -> new EntityNotFoundException("Business not found"));
+    Business business = bussinesService.getBusinessById(orderRequest.getBusinessUuid());
     order.setBusiness(business);
     order.setOrderNumber(this.calculateNextOrderId(orderRequest.getBusinessUuid()));
     Order resultado = orderRepository.save(order);
@@ -75,10 +78,13 @@ public class OrderService {
       orderLine.setLineNumber(calculateNextLineNumber(orderId));
       orderLine.setQuantity(o.getQuantity());
       orderLine.setObservations(o.getObservations());
+      orderLine.setOrderLineIngredients(
+          orderLineIngredientService.createOrderLineIngredients(o));
       orderLines.add(orderLineRepository.save(orderLine));
     }
     return orderLines;
   }
+
 
   private Long calculateNextLineNumber(Long orderId) {
     return Optional.ofNullable(

@@ -20,7 +20,7 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "orders_line_ingredient")
+@Table(name = "order_line_ingredient")
 public class OrderLineIngredient {
 
   @Id
@@ -28,12 +28,12 @@ public class OrderLineIngredient {
   private Long id;
 
   @OneToOne
-  @JoinColumn(referencedColumnName = "id")
-  private Ingredient ingredientId;
+  @JoinColumn(name = "ingredientId",referencedColumnName = "id")
+  private Ingredient ingredient;
 
-  @ManyToOne
-  @JoinColumn(referencedColumnName = "id")
-  private OrderLine orderLineId;
+  @ManyToOne(targetEntity = OrderLine.class)
+  @JoinColumn(name="orderLineId" ,referencedColumnName = "id")
+  private OrderLine orderLine;
 
   private int quantity;
 }

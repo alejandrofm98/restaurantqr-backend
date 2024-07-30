@@ -52,7 +52,7 @@ public class OrderLine {
   @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)
   private Product product;
 
-  @OneToMany()
+  @OneToMany(mappedBy = "orderLineId")
   private List<OrderLineIngredient> orderLineIngredients;
 
 }
