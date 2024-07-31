@@ -1,12 +1,11 @@
 package com.example.demo.dto;
 
-import com.google.type.DateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -22,7 +21,7 @@ public class ProductRequest {
     Integer status;
     String businessUuid;
     Float offer;
-    DateTime publicationDate;
+    Timestamp publicationDate;
     Float subCategory;
     Boolean trending;
 }
