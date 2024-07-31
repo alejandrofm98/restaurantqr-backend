@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.math.BigInteger;
 import java.sql.Timestamp;
 
 @Data
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRequest {
-    BigInteger id;
+    Long id;
     Integer category;
     String description;
     String image;
