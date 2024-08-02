@@ -1,7 +1,12 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.OrderLineIngredientRequest;
 import com.example.demo.dto.OrderLineRequest;
 import com.example.demo.dto.OrderRequest;
+import com.example.demo.dto.response.OrderLineResponse;
+import com.example.demo.dto.response.OrderResponse;
+import com.example.demo.dto.response.mapper.OrderLineResponseMapper;
+import com.example.demo.dto.response.mapper.OrderResponseMapper;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderLine;
@@ -17,6 +22,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,37 +35,44 @@ public class OrderService {
   private final ProductRepository productRepository;
   private final BussinesService bussinesService;
   private final OrderLineIngredientService orderLineIngredientService;
+  private final OrderResponseMapper orderResponseMapper;
+  private final OrderLineResponseMapper orderLineResponseMapper;
 
 
-  public Order getOrderByIdAndBusinessUuid(Long id, String businessUuid) {
+  public OrderResponse getOrderByIdAndBusinessUuid(Long id, String businessUuid) {
     Business business = bussinesService.getBusinessById(businessUuid);
     Optional<Order> order = orderRepository.findByIdAndBusiness(id, business);
-    return order.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+    if (order.isEmpty()) {
+      throw new EntityNotFoundException("Order not found");
+    }
+
+    return orderResponseMapper.toDto(order.get());
   }
 
-  public List<Order> getOrdersByBusinessUuid(String businessUuid) {
+  public List<OrderResponse> getOrdersByBusinessUuid(String businessUuid) {
     Business business = bussinesService.getBusinessById(businessUuid);
     List<Order> orders = orderRepository.findAllByBusiness(business);
     if (orders.isEmpty()) {
       throw new EntityNotFoundException("Orders not found");
     }
-    return orders;
+    return orders.stream().map(orderResponseMapper::toDto).collect(Collectors.toList());
   }
 
-  public Order saveOrder(Order order) {
-    return orderRepository.save(order);
+  public OrderResponse saveOrder(Order order) {
+
+    Order orderSaved = orderRepository.save(order);
+    return orderResponseMapper.toDto(orderSaved);
   }
 
   @Transactional
-  public Order createOrder(OrderRequest orderRequest) {
+  public OrderResponse createOrder(OrderRequest orderRequest) {
     Order order = new Order();
     Business business = bussinesService.getBusinessById(orderRequest.getBusinessUuid());
     order.setBusiness(business);
     order.setOrderNumber(this.calculateNextOrderId(orderRequest.getBusinessUuid()));
     Order resultado = orderRepository.save(order);
     resultado.setOrderLines(createOrderLine(orderRequest, resultado.getId()));
-
-    return resultado;
+    return orderResponseMapper.toDto(resultado);
   }
 
   private Long calculateNextOrderId(String businessUuid) {
@@ -68,19 +81,36 @@ public class OrderService {
 
   }
 
+  //TODO mover esta logica a su proprio service
   public List<OrderLine> createOrderLine(OrderRequest orderRequest, Long orderId) {
     List<OrderLine> orderLines = new ArrayList<>();
     for (OrderLineRequest o : orderRequest.getOrderLines()) {
       OrderLine orderLine = new OrderLine();
-      orderLine.setOrder(getOrderByIdAndBusinessUuid(orderId, orderRequest.getBusinessUuid()));
+      orderLine.setOrder(orderResponseMapper.toEntity(
+          getOrderByIdAndBusinessUuid(orderId, orderRequest.getBusinessUuid())));
       orderLine.setProduct(productRepository.findById(o.getProductId())
           .orElseThrow(() -> new EntityNotFoundException("Product not found")));
       orderLine.setLineNumber(calculateNextLineNumber(orderId));
       orderLine.setQuantity(o.getQuantity());
       orderLine.setObservations(o.getObservations());
-      orderLine.setOrderLineIngredients(
-          orderLineIngredientService.createOrderLineIngredients(o));
-      orderLines.add(orderLineRepository.save(orderLine));
+
+      OrderLine orderLineSaved = orderLineRepository.save(orderLine);
+
+      // Permite que no sea obligatorio tener ingredientes en una orden
+      if (o.getOrderLineIngredients() != null) {
+
+        //Asignamos el id de la orderLine guardada para poder asociarala en orderLineIngredient
+        for (OrderLineIngredientRequest orderLineIngredientModified : o.getOrderLineIngredients()) {
+          orderLineIngredientModified.setOrderLineId(orderLineSaved.getId());
+        }
+        orderLine.setOrderLineIngredients(
+            orderLineIngredientService.createOrderLineIngredients(o));
+        orderLineSaved = orderLineRepository.save(orderLineSaved);
+      }
+
+      orderLines.add(orderLineSaved);
+
+
     }
     return orderLines;
   }
