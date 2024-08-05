@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class RegisterRequest {
+    String name;
+    String lastname;
+    String email;
     String username;
     String password;
+    Integer rol;
+    String businessUuid;
+    Boolean status;
     String fcmToken;
 }

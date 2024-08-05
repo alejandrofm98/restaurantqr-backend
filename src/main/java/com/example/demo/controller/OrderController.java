@@ -3,8 +3,8 @@ package com.example.demo.controller;
 import static com.example.demo.utils.Constants.*;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.OrderRequest;
+import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.response.OrderRequest;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.Order;
 import com.example.demo.services.OrderService;
@@ -28,7 +28,7 @@ public class OrderController {
   @GetMapping("/order/{bussinesUuid}/{id}")
   public ResponseEntity<ApiResponse> getOrder(@PathVariable String bussinesUuid,
       @PathVariable Long id) {
-    OrderResponse order = orderService.getOrderByIdAndBusinessUuid(id,bussinesUuid);
+    OrderResponse order = orderService.getOrderByIdAndBusinessUuidDTO(id,bussinesUuid);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully consulted order",
         order.toString());

@@ -46,7 +46,6 @@ public class OrderLine {
 
   @ManyToOne(cascade = CascadeType.ALL, targetEntity = Order.class)
   @JoinColumn(name = "order_id", referencedColumnName = "id",nullable = false)
-  @JsonBackReference
   private Order order;
 
   @ManyToOne(targetEntity = Product.class)

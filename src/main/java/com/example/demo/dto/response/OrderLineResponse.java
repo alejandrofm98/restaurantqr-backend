@@ -15,6 +15,7 @@ public class OrderLineResponse implements Serializable {
   Long lineNumber;
   Integer quantity;
   String observations;
+  Long orderId;
   Long productId;
   List<OrderLineIngredientResponse> orderLineIngredients;
 }

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.entity.Product;
 import com.example.demo.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;

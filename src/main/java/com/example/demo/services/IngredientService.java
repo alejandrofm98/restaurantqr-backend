@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
-import com.example.demo.dto.IngredientRequest;
-import com.example.demo.dto.mapper.IngredientMapper;
+import com.example.demo.dto.request.IngredientRequest;
+import com.example.demo.dto.request.mapper.IngredientRequestMapper;
 import com.example.demo.entity.Ingredient;
 import com.example.demo.repository.IngredientRepository;
 import com.example.demo.utils.Images;
@@ -20,7 +20,7 @@ public class IngredientService {
 
   private static final String IMAGES_INGREDIENTS_FOLDER = "images/ingredients/";
   private final IngredientRepository ingredientRepository;
-  private final IngredientMapper ingredientMapper;
+  private final IngredientRequestMapper ingredientRequestMapper;
   private final ProductService productService;
   private static final String INGREDIENT_NOT_FOUND = "Ingredient not found";
   private static final String PRODUCT_NOT_FOUND = "";
@@ -40,7 +40,7 @@ public class IngredientService {
 
   public Ingredient addIngredient(IngredientRequest ingredientRequest, MultipartFile file) {
 
-    Ingredient ingredient = ingredientMapper.toEntity(ingredientRequest);
+    Ingredient ingredient = ingredientRequestMapper.toEntity(ingredientRequest);
     try {
       if (productService.getProductById(ingredient.getProduct().getId()) != null) {
         Images images = new Images(file, ingredientRequest.getImage(),
@@ -57,7 +57,7 @@ public class IngredientService {
   }
 
   public Ingredient updateIngredient(IngredientRequest ingredientRequest, MultipartFile file) {
-    Ingredient ingredient = ingredientMapper.toEntity(ingredientRequest);
+    Ingredient ingredient = ingredientRequestMapper.toEntity(ingredientRequest);
 
     if (ingredientRepository.findByIdAndBusinnesUUid(ingredient.getId(),
         auxService.getBussinesUUid()).isEmpty()) {
