@@ -1,10 +1,10 @@
 package com.example.demo.auth;
 
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.BusinessResponse;
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.dto.UserResponse;
+import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.BusinessResponse;
+import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.response.RegisterRequest;
+import com.example.demo.dto.response.UserResponse;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;

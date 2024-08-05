@@ -1,23 +1,15 @@
 package com.example.demo.config;
 
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.response.RegisterRequest;
 import com.example.demo.entity.AuditoryRevision;
 import com.example.demo.jwt.JwtService;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwt;
 import io.micrometer.common.lang.NonNullApi;
-import java.io.IOException;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.envers.RevisionEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponentModule;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;

@@ -3,11 +3,10 @@ package com.example.demo.controller;
 import static com.example.demo.utils.Constants.*;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.OrderRequest;
-import com.example.demo.entity.Business;
+import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.response.OrderRequest;
+import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.Order;
-import com.example.demo.services.BussinesService;
 import com.example.demo.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class OrderController {
   @GetMapping("/order/{bussinesUuid}/{id}")
   public ResponseEntity<ApiResponse> getOrder(@PathVariable String bussinesUuid,
       @PathVariable Long id) {
-    Order order = orderService.getOrderByIdAndBusinessUuid(id,bussinesUuid);
+    OrderResponse order = orderService.getOrderByIdAndBusinessUuidDTO(id,bussinesUuid);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully consulted order",
         order.toString());
@@ -43,7 +42,7 @@ public class OrderController {
   @PostMapping(value = "/order")
   public ResponseEntity<ApiResponse> createOrderAndOrderLine(
       @RequestBody OrderRequest orderRequest) {
-    Order order = orderService.createOrder(orderRequest);
+    OrderResponse order = orderService.createOrder(orderRequest);
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully inserted order",
         order.toString());
@@ -55,7 +54,7 @@ public class OrderController {
 
   @PutMapping("/order")
   public ResponseEntity<ApiResponse> updateOrder(@RequestBody Order order) {
-    Order result = orderService.saveOrder(order);
+    OrderResponse result = orderService.saveOrder(order);
     Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + ORDER_TEXT,
         "Successfully updated order",
         result.toString());

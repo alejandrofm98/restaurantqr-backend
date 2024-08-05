@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,14 +46,15 @@ public class OrderLine {
 
   @ManyToOne(cascade = CascadeType.ALL, targetEntity = Order.class)
   @JoinColumn(name = "order_id", referencedColumnName = "id",nullable = false)
-  @JsonBackReference
   private Order order;
 
   @ManyToOne(targetEntity = Product.class)
   @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)
+  @JsonBackReference
   private Product product;
 
-  @OneToMany()
+  @OneToMany(mappedBy = "orderLine")
+  @JsonManagedReference
   private List<OrderLineIngredient> orderLineIngredients;
 
 }

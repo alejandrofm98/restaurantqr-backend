@@ -6,8 +6,8 @@ import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
 import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.IngredientRequest;
+import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.request.IngredientRequest;
 import com.example.demo.entity.Ingredient;
 import com.example.demo.services.IngredientService;
 import java.util.List;
