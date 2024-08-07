@@ -1,5 +1,7 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
 
+import com.example.demo.dto.request.OrderLineIngredientRequest;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +15,6 @@ public class OrderLineRequest {
   Integer productId;
   Integer quantity;
   String observations;
+  List<OrderLineIngredientRequest> orderLineIngredients;
 
 }

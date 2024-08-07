@@ -1,5 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IngredientRequest {
-  Long id;
-  Long productId;
-  String name;
-  String image;
+public class OrderRequest {
+  String businessUuid;
+  List<OrderLineRequest> orderLines;
 }

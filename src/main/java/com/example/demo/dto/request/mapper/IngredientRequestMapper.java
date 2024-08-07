@@ -1,15 +1,15 @@
-package com.example.demo.dto.mapper;
+package com.example.demo.dto.request.mapper;
 
-import com.example.demo.dto.IngredientRequest;
+import com.example.demo.dto.request.IngredientRequest;
 import com.example.demo.entity.Ingredient;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface IngredientMapper {
+public interface IngredientRequestMapper {
 
-  IngredientMapper INSTANCE = Mappers.getMapper(IngredientMapper.class);
+  IngredientRequestMapper INSTANCE = Mappers.getMapper(IngredientRequestMapper.class);
 
   @Mapping(source = "product.id", target = "productId")
   IngredientRequest toDto(Ingredient ingredient);

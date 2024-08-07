@@ -1,9 +1,9 @@
 package com.example.demo.auth;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.ApiResponse;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.repository.UserRepository;
