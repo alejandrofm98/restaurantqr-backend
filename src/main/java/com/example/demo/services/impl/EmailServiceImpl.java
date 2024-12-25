@@ -1,7 +1,7 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.EmailDetails;
+import com.example.demo.dto.response.EmailDetails;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.services.EmailService;
 import jakarta.mail.Message.RecipientType;

@@ -8,10 +8,10 @@ import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.*;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.EmailDetails;
 import com.example.demo.dto.response.RegisterRequest;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
