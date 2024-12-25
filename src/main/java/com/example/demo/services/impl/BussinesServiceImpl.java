@@ -29,8 +29,13 @@ public class BussinesServiceImpl implements BussinesService {
 
   }
 
-  public Business getBusinessById(String id) {
+  public Business findBusinessById(String id) {
     return businessRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Bussines with id " + id + " not found"));
   }
+
+  public boolean existsBusinessById(String id) {
+    return businessRepository.existsById(id);
+  }
+
 }

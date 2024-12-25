@@ -8,6 +8,8 @@ public interface BussinesService {
 
   void deleteBusiness(String id);
 
-  Business getBusinessById(String id);
+  Business findBusinessById(String id);
+
+  boolean existsBusinessById(String id);
 
 }

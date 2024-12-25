@@ -12,7 +12,7 @@ import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.EmailDetails;
-import com.example.demo.dto.response.RegisterRequest;
+import com.example.demo.dto.request.RegisterRequest;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;

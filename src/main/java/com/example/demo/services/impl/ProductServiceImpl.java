@@ -3,6 +3,7 @@ package com.example.demo.services.impl;
 import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
 
 import com.example.demo.dto.request.ProductRequest;
+import com.example.demo.dto.request.mapper.ProductRequestMapper;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
@@ -31,11 +32,13 @@ public class ProductServiceImpl implements ProductService {
 
   private final AuxServiceImpl auxService;
 
+  private final ProductRequestMapper productRequestMapper;
+
 
   public Product insertProductWithImage(MultipartFile file, ProductRequest productRequest)
       throws IOException {
-    Product product = new Product();
-    setProduct(productRequest, product);
+    Product product;
+    product = setProduct(productRequest);
 
     String originalFileName = file.getOriginalFilename();
     String fileExtension = getFileExtension(originalFileName);
@@ -57,10 +60,10 @@ public class ProductServiceImpl implements ProductService {
     }
   }
 
-  private static String writeImage(MultipartFile file, Product product, String newFileName)
+  private static void writeImage(MultipartFile file, Product product, String newFileName)
       throws IOException {
     String directory = "images/" + product.getBusiness().getBusinessUuid();
-    String imagePath = directory + "/" + newFileName; // Ruta de la imagen
+    Path imagePath = Paths.get(directory + "/" + newFileName); // Ruta de la imagen
 
     // Verificar si la carpeta existe, si no, crearla
     Path directoryPath = Paths.get(directory);
@@ -69,15 +72,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // Eliminar la imagen anterior si existe
-    Files.deleteIfExists(Paths.get(imagePath));
+    Files.deleteIfExists(imagePath);
 
     // Escribir el archivo en la carpeta
     byte[] bytes = file.getBytes();
-    Path path = Paths.get(imagePath);
-    Files.write(path, bytes);
-    product.setImage(imagePath);
+    Files.write(imagePath, bytes);
+    product.setImage(imagePath.toString());
 
-    return imagePath;
   }
 
   private static void checkImageSize(MultipartFile file, String operation) {
@@ -101,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
         productRequest.getName().replaceAll("\\s+", "_") + "." + getFileExtension(
             oldImage); // Nuevo nombre de la imagen
 
-    setProduct(productRequest, product);
+    product = productRequestMapper.partialUpdate(productRequest, product);
     String originalFileName = file.getOriginalFilename();
     String fileExtension = getFileExtension(originalFileName);
     checkImageExtension(fileExtension);
@@ -132,16 +133,15 @@ public class ProductServiceImpl implements ProductService {
     return false;
   }
 
-  private void setProduct(ProductRequest productRequest, Product product) {
-    product.setName(productRequest.getName());
-    product.setDescription(productRequest.getDescription());
-    product.setPrice(productRequest.getPrice());
-    product.setCategory(productRequest.getCategory());
-    product.setStatus(productRequest.getStatus());
-
+  private Product setProduct(ProductRequest productRequest) {
+    Product product = productRequestMapper.toEntity(productRequest);
     product.setBusiness(businessRepository.findById(auxService.getBussinesUUid())
         .orElseThrow(() -> new EntityNotFoundException("The bussines doesnt exist")));
+
+    return product;
   }
+
+
 
 
   private String getFileExtension(String fileName) {

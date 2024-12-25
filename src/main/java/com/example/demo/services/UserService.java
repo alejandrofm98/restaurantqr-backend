@@ -1,8 +1,20 @@
 package com.example.demo.services;
 
 import com.example.demo.entity.User;
+import java.util.List;
+
 
 public interface UserService {
 
-  User findUserbyUser(String username);
+  User findUserbyUsername(String username);
+
+  User findUserById(Integer id);
+
+  User saveUser(User user);
+
+  boolean existsByUsername(String username);
+
+  List<User> findUsersByBussinesUuid(String bussinesUuid);
+
+  List<User> findAllUsers();
 }

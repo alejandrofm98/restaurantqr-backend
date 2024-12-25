@@ -20,7 +20,7 @@ public class AuxServiceImpl implements AuxService {
   }
 
   public String getBussinesUUid(){
-    return userService.findUserbyUser(getUsername())
+    return userService.findUserbyUsername(getUsername())
         .getBusinessUuid();
   }
 }

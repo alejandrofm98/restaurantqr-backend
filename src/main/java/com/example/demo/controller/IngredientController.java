@@ -9,7 +9,7 @@ import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.request.IngredientRequest;
 import com.example.demo.entity.Ingredient;
-import com.example.demo.services.impl.IngredientServiceImpl;
+import com.example.demo.services.IngredientService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class IngredientController {
 
   private static final String INGREDIENT_TEXT = "/ingredient";
-  private final IngredientServiceImpl ingredientServiceImpl;
+  private final IngredientService ingredientService;
 
   @GetMapping("/ingredient/{id}")
   public ResponseEntity<ApiResponse> getIngredient(@PathVariable Long id) {
-    Ingredient ingredient = ingredientServiceImpl.getIngredientById(id);
+    Ingredient ingredient = ingredientService.getIngredientById(id);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully consulted ingredient by id " + id, ingredient.toString());
     ApiResponse apiResponse = ApiResponse.builder().response(ingredient).build();
@@ -46,7 +46,7 @@ public class IngredientController {
 
   @GetMapping("/ingredient/product/{productId}")
   public ResponseEntity<ApiResponse> getIngredientbyProductId(@PathVariable Long productId) {
-    List<Ingredient> ingredient = ingredientServiceImpl.getIngredientByProductId(productId);
+    List<Ingredient> ingredient = ingredientService.getIngredientByProductId(productId);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully consulted ingredients by productId " + productId, ingredient.toString());
     ApiResponse apiResponse = ApiResponse.builder().response(ingredient).build();
@@ -57,7 +57,7 @@ public class IngredientController {
   public ResponseEntity<ApiResponse> addIngredient(
       @RequestPart("ingredient") IngredientRequest ingredientRequest,
       @RequestParam("image") MultipartFile file) {
-    Ingredient ingredient = ingredientServiceImpl.addIngredient(ingredientRequest, file);
+    Ingredient ingredient = ingredientService.addIngredient(ingredientRequest, file);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully inserted ingredient", ingredient.toString());
     ApiResponse apiResponse = ApiResponse.builder().response(ingredient).build();
@@ -68,7 +68,7 @@ public class IngredientController {
   public ResponseEntity<ApiResponse> updateIngredient(
       @RequestPart("ingredient") IngredientRequest ingredientRequest,
       @RequestParam(value = "image", required = false) MultipartFile file) {
-    Ingredient ingredientSaved = ingredientServiceImpl.updateIngredient(ingredientRequest, file);
+    Ingredient ingredientSaved = ingredientService.updateIngredient(ingredientRequest, file);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully updated ingredient", ingredientSaved.toString());
     ApiResponse apiResponse = ApiResponse.builder().response(ingredientSaved).build();
@@ -77,8 +77,8 @@ public class IngredientController {
 
   @DeleteMapping("/ingredient/{id}")
   public ResponseEntity<ApiResponse> deleteIngredient(@PathVariable Long id) {
-    Ingredient ingredient = ingredientServiceImpl.getIngredientById(id);
-    ingredientServiceImpl.deleteIngredient(id);
+    Ingredient ingredient = ingredientService.getIngredientById(id);
+    ingredientService.deleteIngredient(id);
     Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_SECURE_URL + INGREDIENT_TEXT,
         "Successfully deleted ingredient " + id, ingredient.toString());
     return ResponseEntity.noContent().build();
@@ -87,7 +87,7 @@ public class IngredientController {
 
   @GetMapping("/ingredients")
   public ResponseEntity<ApiResponse> getIngredients() {
-    ApiResponse apiResponse = ApiResponse.builder().response(ingredientServiceImpl.getIngredients())
+    ApiResponse apiResponse = ApiResponse.builder().response(ingredientService.getIngredients())
         .build();
 
     return ResponseEntity.ok(apiResponse);
