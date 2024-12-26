@@ -17,6 +17,24 @@ jobs:
           java-version: 21
           distribution: 'corretto'
           cache: maven
+
+      - name: copy application.properties
+        run: cp /src/main/resources/application-example.properties /src/main/resources/application.properties
+
+      - name: Read/Write Properties File
+        uses: kurt-code/gha-properties@v0.0.1
+        id: read-write-properties
+        with:
+          operation: 'write'
+          file-path: '/src/main/resources/application.properties'
+          key-value-pairs: |
+            spring.datasource.url=${{secrets.DATASOURCE_URL}}
+            spring.datasource.username=${{secrets.DATASOURCE_USERNAME}}
+            spring.datasource.password=${{secrets.DATASOURCE_PASSWORD}}
+
+      - name: Get the Read properties
+        run: echo cat /src/main/resources/application.properties
+
       - name: Build with Maven
         run: mvn clean package
 
