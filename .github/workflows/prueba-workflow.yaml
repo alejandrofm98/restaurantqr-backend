@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: 21
           distribution: 'corretto'
-
-      - name: Setup Maven
-        run: mvn clean install package
+          cache: maven
+      - name: Build with Maven
+        run: mvn clean package
 
