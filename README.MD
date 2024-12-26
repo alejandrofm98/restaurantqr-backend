@@ -7,7 +7,7 @@ deberemos obtenerlos del sistema de cifrado de estos ficheros:
 ````text
 src/main/resources/application.properties
 src/main/resources/firebase-service-account.json
-.env
+docker/init/.env
 ````
 
 Necesitaremos java 21 en nuestro caso amazon correto.

@@ -1,14 +1,18 @@
 version: "3"
 services:
-#  java:
-#    build:
-#      dockerfile: docker/java/java.dockerfile
-#      context: .
-#    volumes:
-#      - ./src:/app/src:rw,cached
-#    ports:
-#      - 4000:4000
-  mysql:
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./src:/app/src:rw,cached
+    ports:
+      - 4000:4000
+    depends_on:
+      - db
+    entrypoint: [ "java","-jar","click2eat-0.0.28-SNAPSHOT.jar" ]
+    tty: true
+  db:
     image: mysql:8.0
     restart: always
     ports:
@@ -22,3 +26,6 @@ services:
       - ./init:/docker-entrypoint-initdb.d
 volumes:
   java-db:
+networks:
+  default:
+    driver: bridge

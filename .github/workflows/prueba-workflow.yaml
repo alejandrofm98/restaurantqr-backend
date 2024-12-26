@@ -1,0 +1,22 @@
+name: Prueba
+
+on:
+  push:
+    branches-ignore:
+      - config
+jobs:
+  project-build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Java
+        uses: actions/setup-java@v4.6.0
+        with:
+          java-version: 21
+          distribution: 'corretto'
+
+      - name: Setup Maven
+        run: mvn clean install package
+
