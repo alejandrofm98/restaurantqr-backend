@@ -19,6 +19,9 @@ jobs:
           cache: maven
 
       - name: copy application.properties
+        run: pwd
+
+      - name: copy application.properties
         run: cp /src/main/resources/application-example.properties /src/main/resources/application.properties
 
       - name: Read/Write Properties File
