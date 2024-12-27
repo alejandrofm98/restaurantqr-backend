@@ -32,7 +32,10 @@ jobs:
             {
               "spring.datasource.url": "${{ secrets.DATASOURCE_URL }}",
               "spring.datasource.username": "${{ secrets.DATASOURCE_USERNAME }}",
-              "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}"
+              "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
+              "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
+              "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}"
+            
             }
 
       - name: Get the Read properties
