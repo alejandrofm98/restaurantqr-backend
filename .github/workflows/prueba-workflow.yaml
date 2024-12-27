@@ -7,6 +7,7 @@ on:
 jobs:
   project-build:
     runs-on: self-hosted
+    environment: pro
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -29,7 +30,7 @@ jobs:
           file-path: 'src/main/resources/application.properties'
           key-value-pairs: |
             {
-              "spring.datasource.url": "prueba",
+              "spring.datasource.url": "${{ secrets.DATASOURCE_URL }}",
               "spring.datasource.username": "${{ secrets.DATASOURCE_USERNAME }}",
               "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}"
             }
