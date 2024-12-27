@@ -28,7 +28,7 @@ jobs:
           operation: 'write'
           file-path: 'src/main/resources/application.properties'
           key-value-pairs: '{ "spring.datasource.url": ${{secrets.DATASOURCE_URL }}, "spring.datasource.username":
-                                                                                        ${{secrets.DATASOURCE_USERNAME}}, "spring.datasource.password": ${{secrets.DATASOURCE_PASSWORD}}' }
+                                                                                        ${{secrets.DATASOURCE_USERNAME}}, "spring.datasource.password": ${{secrets.DATASOURCE_PASSWORD}} }'
 
       - name: Get the Read properties
         run: echo cat src/main/resources/application.properties
