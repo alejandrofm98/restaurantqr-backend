@@ -38,8 +38,14 @@ jobs:
             
             }
 
-      - name: Get the Read properties
-        run: echo cat src/main/resources/application.properties
+      - name: Read properties
+        run: echo src/main/resources/application.properties
+
+      - name: Set up Firebase service account
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > src/main/resources/firebase-service-account.json
+
+  
 
       - name: Build with Maven
         run: mvn clean package
