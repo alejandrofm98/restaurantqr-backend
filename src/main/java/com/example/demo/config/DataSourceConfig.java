@@ -6,12 +6,14 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+@Log4j2
 @Profile("dev|pro")
 @Configuration
 public class DataSourceConfig {
@@ -43,6 +45,7 @@ public class DataSourceConfig {
   @Value("${database.port}")
   private int databasePort;
 
+
   @PostConstruct
   public void setupSSHTunnel() {
     Session session;
@@ -55,7 +58,7 @@ public class DataSourceConfig {
       session.setPortForwardingL(databasePort, sshHost, databasePort);
 
     } catch (JSchException e) {
-      throw new Exceptions("Fallo al crear el ssh tunnel para conectar a la bd");
+       log.info("Fallo al crear el ssh tunnel para conectar a la bd");
     }
   }
 
