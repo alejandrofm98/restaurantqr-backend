@@ -148,6 +148,12 @@
       <version>${org.mapstruct.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.mwiede</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.2.21</version>
+    </dependency>
+
 
   </dependencies>
 

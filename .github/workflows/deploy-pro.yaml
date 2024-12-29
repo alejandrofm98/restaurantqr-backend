@@ -1,4 +1,4 @@
-name: Prueba
+name: Deploy pro
 
 on:
   push:
@@ -37,15 +37,17 @@ jobs:
               "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}"
             
             }
+      - name: Set up application-pro.properties
+        run: |
+          echo "${{ secrets.APPLICATION_ENTORNO_PROPERTIES }}" > src/main/resources/application-pro.properties
 
-      - name: Read properties
-        run: echo src/main/resources/application.properties
+      - name: Create private key
+        run: echo "${{ secrets.PRIVATE_KEY}}"
 
       - name: Set up Firebase service account
         run: |
           echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > src/main/resources/firebase-service-account.json
 
-  
 
       - name: Build with Maven
         run: mvn clean package
