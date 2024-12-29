@@ -81,4 +81,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: mkdir app/click2eat-backend && mv target/click2eat-${{ steps.project.outputs.version }}.jar app/click2eat-backend/click2eat.jar && rm -rf app/click2eat-backend/target
+          script:  mv target/click2eat-${{ steps.project.outputs.version }}.jar app/click2eat-backend/click2eat.jar && rm -rf app/click2eat-backend/target
