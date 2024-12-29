@@ -35,8 +35,10 @@ jobs:
               "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
               "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
               "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}"
-              "spring.profiles.active": "pro"            
             }
+
+      - name: Activate spring boot profile
+        run: echo "spring.profiles.active=pro" >> src/main/resources/application.properties
 
       - name: Set up application-pro.properties
         run: |
