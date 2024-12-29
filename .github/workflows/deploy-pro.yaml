@@ -48,8 +48,12 @@ jobs:
         run: echo "${{ secrets.PRIVATE_KEY}}" > src/main/resources/private_key_pro.key
 
       - name: Set up Firebase service account
-        run: |
-          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > src/main/resources/firebase-service-account.json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "firebase-service-account.json"
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          dir: 'src/main/resources/'
 
 
       - name: Build with Maven
