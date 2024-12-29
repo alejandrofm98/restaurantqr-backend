@@ -9,9 +9,6 @@ jobs:
     runs-on: self-hosted
     environment: pro
     steps:
-      - name: github actor
-        run: echo ${{ github.actor }}
-
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
@@ -58,14 +55,21 @@ jobs:
           json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           dir: 'src/main/resources/'
 
+      - name: Extract Maven project version
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        id: project
+
+      - name: Show extracted Maven project version
+        run: echo ${{ steps.project.outputs.version }}
+
       - name: Build with Maven
         run: mvn clean package
 
-#      - name: Copy via ssh
-#        uses: appleboy/scp-action@v0.1.7
-#        with:
-#          host: ${{ secrets.SERVER_HOST }}
-#          username: ${{ secrets.SERVER_USERNAME }}
-#          key: ${{ secrets.PRIVATE_KEY }}
-#          source: target/click2eat-0.0.28-SNAPSHOT.jar
-#          target: app/click2eat-backend/
+      - name: Copy via ssh
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "target/click2eat-0.0.28-SNAPSHOT.jar"
+          target: app/click2eat-backend/

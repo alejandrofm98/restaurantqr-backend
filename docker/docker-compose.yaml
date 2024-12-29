@@ -7,7 +7,7 @@ services:
     volumes:
       - ./src:/app/src:rw,cached
     ports:
-      - 4000:4000
+      - 8080:8081
     depends_on:
       - db
     entrypoint: [ "java","-jar","click2eat-0.0.28-SNAPSHOT.jar" ]
