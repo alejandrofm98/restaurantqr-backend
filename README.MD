@@ -31,3 +31,11 @@ Eliminar los contenedores y sus volomunes
 cd docker
 docker compose down -v
 `````
+
+# Apuntar a Servidores
+Si queremos utilizar la bd de pro o dev deberemos añadir spring.profiles.active=entorno en el 
+application.properties (esto es lo que se hace para desplegar en los servidores).
+![image](https://github.com/user-attachments/assets/6e75d4f6-23f3-4a58-a65a-1ea9f480bdb8)
+Aparte de tener creado el fichero application-entorno.properties y el private_key correspondiente. 
+Ambos ficheros estan en bitwarden.
+![image](https://github.com/user-attachments/assets/2e8d2806-d5c0-4afe-a03d-ff1ff39559e2)
