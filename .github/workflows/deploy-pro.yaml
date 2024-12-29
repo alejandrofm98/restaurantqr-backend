@@ -82,4 +82,5 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.PRIVATE_KEY }}
           script:  mv /home/ubuntu/app/click2eat-backend/target/click2eat-${{ steps.project.outputs.version }}.jar /home/ubuntu/app/click2eat-backend/click2eat.jar  
-            && rm -rf /home/ubuntu/app/click2eat-backend/target
+            && rm -rf /home/ubuntu/app/click2eat-backend/target && mv  /home/ubuntu/app/click2eat-backend/docker/docker-compose-servidor.yaml /home/ubuntu/app/click2eat-backend/docker-compose.yaml
+            && rm -rf /home/ubuntu/app/click2eat-backend/docker/
