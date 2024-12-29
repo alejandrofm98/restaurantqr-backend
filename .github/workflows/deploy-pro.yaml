@@ -72,4 +72,13 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           source: "target/click2eat-${{ steps.project.outputs.version }}.jar"
-          target: app/click2eat-backend/
+          target: "app/click2eat-backend/"
+
+      - name: Renaming file in server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: mkdir app/click2eat-backend && mv target/click2eat-${{ steps.project.outputs.version }}.jar app/click2eat-backend/click2eat.jar && rm -rf app/click2eat-backend/target
