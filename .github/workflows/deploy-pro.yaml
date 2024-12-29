@@ -59,10 +59,10 @@ jobs:
         run: mvn clean package
 
       - name: Copy via ssh
-        uses: garygrossgarten/github-action-scp@0.9.0
+        uses: appleboy/scp-action@v0.1.7
         with:
-          local: target/click2eat-0.0.28-SNAPSHOT.jar
-          remote: app/click2eat-backend/
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          privateKey: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: target/click2eat-0.0.28-SNAPSHOT.jar
+          target: app/click2eat-backend/
