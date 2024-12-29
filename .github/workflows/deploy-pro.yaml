@@ -42,7 +42,7 @@ jobs:
           echo "${{ secrets.APPLICATION_ENTORNO_PROPERTIES }}" > src/main/resources/application-pro.properties
 
       - name: Create private key
-        run: echo "${{ secrets.PRIVATE_KEY}}"
+        run: echo "${{ secrets.PRIVATE_KEY}}" > src/main/resources/private_key_pro.key
 
       - name: Set up Firebase service account
         run: |
