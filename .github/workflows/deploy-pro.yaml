@@ -81,5 +81,5 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script:  mv /home/ubuntu/app/click2eat-backend/target/click2eat-${{ steps.project.outputs.version }}.jar /home/ubuntu/app/click2eat-backend/click2eat.jar  |
+          script:  mv /home/ubuntu/app/click2eat-backend/target/click2eat-${{ steps.project.outputs.version }}.jar /home/ubuntu/app/click2eat-backend/click2eat.jar  
             && rm -rf /home/ubuntu/app/click2eat-backend/target
