@@ -71,7 +71,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "target/click2eat-${{ steps.project.outputs.version }}.jar"
+          source: "target/click2eat-${{ steps.project.outputs.version }}.jar, docker/"
           target: "app/click2eat-backend/"
 
       - name: Renaming file in server

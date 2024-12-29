@@ -10,10 +10,10 @@ services:
       - 8080:8081
     depends_on:
       - db
-    entrypoint: [ "java","-jar","click2eat-0.0.28-SNAPSHOT.jar" ]
+    entrypoint: [ "java","-jar","click2eat.jar" ]
     tty: true
   db:
-    image: mysql:8.0
+    image: mysql
     restart: always
     ports:
       - "${MYSQL_PORT}:3306"
