@@ -5,9 +5,12 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import jakarta.annotation.PostConstruct;
+import java.sql.Connection;
 import java.sql.SQLException;
+import javax.naming.CommunicationException;
 import javax.sql.DataSource;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -47,9 +50,6 @@ public class DataSourceConfig {
   @Value("${database.port}")
   private int databasePort;
 
-  @Value("${spring.datasource.url.docker}")
-  private String dockerUrl;
-
   @PostConstruct
   public void setupSSHTunnel() {
     Session session;
@@ -68,22 +68,16 @@ public class DataSourceConfig {
 
   @Bean
   public DataSource getDataSource() {
-    return getDB(driverClassName, url, username, password, dockerUrl);
+    return getDB(driverClassName, url, username, password);
   }
 
   static DataSource getDB(String driverClassName, String url, String username,
-      String password, String dockerUrl) {
+      String password) {
     DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
     dataSourceBuilder.driverClassName(driverClassName);
     dataSourceBuilder.url(url);
     dataSourceBuilder.username(username);
     dataSourceBuilder.password(password);
-    try {
-      dataSourceBuilder.build().getConnection();
-    } catch (SQLException e) {
-      log.error("Se utiliza la configuración de db para el docker");
-      dataSourceBuilder.url(dockerUrl);
-    }
     return dataSourceBuilder.build();
   }
 }

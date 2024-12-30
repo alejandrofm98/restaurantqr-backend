@@ -1,4 +1,3 @@
-version: "3.5"
 services:
   app:
     working_dir: /app
@@ -12,8 +11,8 @@ services:
     tty: true
     networks:
       - shared-network
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    environment:
+      - JDBC_URL=jdbc:mysql://db:3306/restaurante
 networks:
   shared-network:
     external: true
