@@ -1,17 +1,4 @@
-version: "3"
 services:
-  app:
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
-    volumes:
-      - ./src:/app/src:rw,cached
-    ports:
-      - 8080:8081
-    depends_on:
-      - db
-    entrypoint: [ "java","-jar","click2eat.jar" ]
-    tty: true
   db:
     image: mysql
     restart: always
@@ -24,8 +11,20 @@ services:
     volumes:
       - java-db:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: app
+    ports:
+      - "8081:8080"
+      - "5005:5005"
+    depends_on:
+      - db
+    environment:
+      - JDBC_URL=jdbc:mysql://db:3306/restaurante
+    tty: true
+
 volumes:
   java-db:
-networks:
-  default:
-    driver: bridge

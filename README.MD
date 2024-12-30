@@ -7,7 +7,7 @@ deberemos obtenerlos del sistema de cifrado de estos ficheros:
 ````text
 src/main/resources/application.properties
 src/main/resources/firebase-service-account.json
-docker/init/.env
+docker/.env
 ````
 
 Necesitaremos java 21 en nuestro caso amazon correto.
@@ -31,6 +31,11 @@ Eliminar los contenedores y sus volomunes
 cd docker
 docker compose down -v
 `````
+Y por ultimo configuramos el remote debug y ya funcionara correctamente.
+![image](https://github.com/user-attachments/assets/5c179fc1-a92c-4450-bce1-271f64732833)
+Para ver los logs iremos a Services -> seleccionamos el contenedor en este caso app y vemos la pestaña Log
+![image](https://github.com/user-attachments/assets/1350dfe1-eb69-43b5-9bd7-41d59c78d6a5)
+
 
 # Apuntar a Servidores
 Si queremos utilizar la bd de pro o dev deberemos añadir spring.profiles.active=entorno en el 
