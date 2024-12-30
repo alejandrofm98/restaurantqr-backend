@@ -34,7 +34,7 @@ jobs:
               "spring.datasource.username": "${{ secrets.DATASOURCE_USERNAME }}",
               "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
               "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
-              "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}"
+              "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}",
               "spring.datasource.url.docker": "${{ secrets.DATASOURCE_URL_DOCKER }}"
             }
 
