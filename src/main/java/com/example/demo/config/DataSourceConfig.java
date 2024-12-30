@@ -81,7 +81,7 @@ public class DataSourceConfig {
     try {
       dataSourceBuilder.build().getConnection();
     } catch (SQLException e) {
-      log.error(e);
+      log.error("Se utiliza la configuración de db para el docker");
       dataSourceBuilder.url(dockerUrl);
     }
     return dataSourceBuilder.build();
