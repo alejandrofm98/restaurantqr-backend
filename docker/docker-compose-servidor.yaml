@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 services:
   app:
     working_dir: /app
@@ -10,3 +10,10 @@ services:
       - 8080:8081
     entrypoint: [ "java","-jar","click2eat.jar" ]
     tty: true
+    networks:
+      - shared-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+networks:
+  shared-network:
+    external: true
