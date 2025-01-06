@@ -6,7 +6,7 @@ services:
       - ./src:/app/src:rw,cached
       - ./click2eat.jar:/app/click2eat.jar
     ports:
-      - 8080:8081
+      - 8080:8080
     entrypoint: [ "java","-jar","click2eat.jar" ]
     tty: true
     networks:
