@@ -1,15 +1,13 @@
 name: test
 
 on:
-  push:
-    branches-ignore:
-      - config
+  workflow_run:
+    workflows: [ "build" ] # The name of the first workflow
+    types:
+      - completed
 
 jobs:
   test:
-    needs:
-      - build
-    name: test
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2

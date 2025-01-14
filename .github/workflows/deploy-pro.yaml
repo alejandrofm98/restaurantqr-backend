@@ -1,15 +1,12 @@
-name: Deploy pro
+name: deploy-pro
 
 on:
-  push:
-    branches-ignore:
-      - config
+  workflow_run:
+    workflows: [ "build","test" ] # The name of the first workflow
+    types:
+      - completed
 jobs:
   deploy-pro:
-    name: deploy-pro
-    needs:
-      - build
-      - test
     runs-on: self-hosted
     environment: pro
     steps:
