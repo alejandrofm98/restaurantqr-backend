@@ -2,7 +2,8 @@ name: test
 
 on:
   workflow_run:
-    workflows: [ "build" ] # The name of the first workflow
+    workflows:
+      - build
     types:
       - completed
 
