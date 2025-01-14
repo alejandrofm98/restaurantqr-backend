@@ -7,12 +7,9 @@ on:
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    name: build
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Setup Java
         uses: actions/setup-java@v4.6.0
         with:
@@ -20,21 +17,39 @@ jobs:
           distribution: 'corretto'
           cache: maven
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
+      - name: copy application.properties
+        run: cp src/main/resources/application-example.properties src/main/resources/application.properties
+
+      - name: Read/Write Properties File
+        uses: kurt-code/gha-properties@v0.0.1
+        id: read-properties
         with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v1
+          operation: 'write'
+          file-path: 'src/main/resources/application.properties'
+          key-value-pairs: |
+            {
+              "spring.datasource.url": "${{ secrets.DATASOURCE_URL }}",
+              "spring.datasource.username": "${{ secrets.DATASOURCE_USERNAME }}",
+              "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
+              "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
+              "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}",
+              "spring.datasource.url.docker": "${{ secrets.DATASOURCE_URL_DOCKER }}"
+            }
+
+      - name: Activate spring boot profile
+        run: echo "spring.profiles.active=pro" >> src/main/resources/application.properties
+
+      - name: Set up application-pro.properties
+        run: |
+          echo "${{ secrets.APPLICATION_ENTORNO_PROPERTIES }}" > src/main/resources/application-pro.properties
+
+      - name: Create private key
+        run: echo "${{ secrets.PRIVATE_KEY}}" > src/main/resources/private_key_pro.key
+
+      - name: Set up Firebase service account
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alejandrofm98_restaurantqr-backend_AZRmvOqL3zG8BDeyShQE
+          name: "firebase-service-account.json"
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          dir: 'src/main/resources/'
