@@ -1,4 +1,4 @@
-name: deploy-pro
+name: Deploy pro
 
 on:
   workflow_run:

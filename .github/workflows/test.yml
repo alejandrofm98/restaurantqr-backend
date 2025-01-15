@@ -1,9 +1,9 @@
-name: test
+name: Test
 
 on:
   workflow_run:
     workflows:
-      - build
+      - Build
     types:
       - completed
 
