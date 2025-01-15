@@ -2,7 +2,9 @@ name: deploy-pro
 
 on:
   workflow_run:
-    workflows: [build, test]
+    workflows:
+      - build
+      - test
     types:
       - completed
 jobs:
