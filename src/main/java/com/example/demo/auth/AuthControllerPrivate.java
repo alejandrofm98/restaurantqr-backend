@@ -3,10 +3,10 @@ package com.example.demo.auth;
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.dto.response.RegisterRequest;
+import com.example.demo.dto.request.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.services.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ import static com.example.demo.utils.Constants.*;
 public class AuthControllerPrivate {
 
 
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final AuthService authService;
 
   @PostMapping(value = "secure")
@@ -47,7 +47,7 @@ public class AuthControllerPrivate {
     String token = authResponse.getToken();
 
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-            token,
+        token,
         request.toString()
     );
     ApiResponse apiResponse = ApiResponse.builder()
@@ -78,16 +78,16 @@ public class AuthControllerPrivate {
 
   @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
   @GetMapping("users")
-  public ResponseEntity<ApiResponse> fetchAllUsers(){
+  public ResponseEntity<ApiResponse> fetchAllUsers() {
     try {
-      List<User> users = userRepository.findAll();
+      List<User> users = userService.findAllUsers();
       Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users",
-              "All users displayed correctly",
-              users.toString());
+          "All users displayed correctly",
+          users.toString());
 
       ApiResponse apiResponse = ApiResponse.builder()
-              .response(users)
-              .build();
+          .response(users)
+          .build();
       return ResponseEntity.ok(apiResponse);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(ApiResponse.builder().build());
@@ -97,32 +97,32 @@ public class AuthControllerPrivate {
   @GetMapping("/users/{businessUuid}")
   public ResponseEntity<ApiResponse> getUsersByBusinessUuid(@PathVariable String businessUuid) {
     try {
-      List<User> users = authService.getUsersByBusinessUuid(businessUuid);
+      List<User> users = userService.findUsersByBussinesUuid(businessUuid);
       Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users/" + businessUuid,
-              "Users for business displayed correctly",
-              users.toString());
+          "Users for business displayed correctly",
+          users.toString());
 
       if (users.isEmpty()) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.builder()
-                        .error(true)
-                        .errorDescription("No users found for the given business UUID")
-                        .build());
+            .body(ApiResponse.builder()
+                .error(true)
+                .errorDescription("No users found for the given business UUID")
+                .build());
       }
 
       ApiResponse apiResponse = ApiResponse.builder()
-              .response(users)
-              .build();
+          .response(users)
+          .build();
       return ResponseEntity.ok(apiResponse);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body(ApiResponse.builder()
-                      .error(true)
-                      .errorDescription("An error occurred while fetching users")
-                      .build());
+          .body(ApiResponse.builder()
+              .error(true)
+              .errorDescription("An error occurred while fetching users")
+              .build());
     }
 
 
-}
+  }
 }
 

@@ -1,0 +1,18 @@
+services:
+  app:
+    working_dir: /app
+    image: amazoncorretto:21.0.5
+    volumes:
+      - ./src:/app/src:rw,cached
+      - ./click2eat.jar:/app/click2eat.jar
+    ports:
+      - 8080:8080
+    entrypoint: [ "java","-jar","click2eat.jar" ]
+    tty: true
+    networks:
+      - shared-network
+    environment:
+      - JDBC_URL=jdbc:mysql://db:3306/restaurante
+networks:
+  shared-network:
+    external: true
