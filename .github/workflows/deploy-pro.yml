@@ -1,4 +1,4 @@
-name: Build
+name: Deploy Pro
 
 on:
   push:
@@ -59,6 +59,7 @@ jobs:
   test:
     needs: build
     runs-on: self-hosted
+    steps:
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
