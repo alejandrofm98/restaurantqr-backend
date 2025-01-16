@@ -1,0 +1,114 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - config
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v4.6.0
+        with:
+          java-version: 21
+          distribution: 'corretto'
+          cache: maven
+
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: copy application.properties
+        run: cp src/main/resources/application-example.properties src/main/resources/application.properties
+
+      - name: Read/Write Properties File
+        uses: kurt-code/gha-properties@v0.0.1
+        id: read-properties
+        with:
+          operation: 'write'
+          file-path: 'src/main/resources/application.properties'
+          key-value-pairs: |
+            {
+              "spring.datasource.url": "${{ secrets.DATASOURCE_URL }}",
+              "spring.datasource.username": "${{ secrets.DATASOURCE_USERNAME }}",
+              "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
+              "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
+              "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}",
+              "spring.datasource.url.docker": "${{ secrets.DATASOURCE_URL_DOCKER }}"
+            }
+
+      - name: Activate spring boot profile
+        run: echo "spring.profiles.active=pro" >> src/main/resources/application.properties
+
+      - name: Set up application-pro.properties
+        run: |
+          echo "${{ secrets.APPLICATION_ENTORNO_PROPERTIES }}" > src/main/resources/application-pro.properties
+
+      - name: Create private key
+        run: echo "${{ secrets.PRIVATE_KEY}}" > src/main/resources/private_key_pro.key
+
+      - name: Set up Firebase service account
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "firebase-service-account.json"
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          dir: 'src/main/resources/'
+
+  test:
+    needs: build
+    runs-on: self-hosted
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alejandrofm98_restaurantqr-backend_AZRmvOqL3zG8BDeyShQE
+
+  deploy-pro:
+    needs: test
+    runs-on: self-hosted
+    environment: pro
+    steps:
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Extract Maven project version
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        id: project
+
+      - name: Show extracted Maven project version
+        run: echo ${{ steps.project.outputs.version }}
+
+      - name: Copy via ssh
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "target/click2eat-${{ steps.project.outputs.version }}.jar, docker/docker-compose-servidor.yaml"
+          target: "app/click2eat-backend/"
+
+      - name: Renaming file in server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script:  cd /home/ubuntu/app/click2eat-backend/ && mv target/click2eat-${{ steps.project.outputs.version }}.jar click2eat.jar  
+            && rm -rf target/ && mv docker/docker-compose-servidor.yaml docker-compose.yaml
+            && rm -rf docker/ && docker compose down  && docker compose up -d
