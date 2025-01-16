@@ -1,19 +1,20 @@
 package com.example.demo.services;
 
 import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
 
-  private final UserRepository userRepository;
+public interface UserService {
 
-  public User findUserbyUser(String username) {
-    return userRepository.findByUsername(username)
-        .orElseThrow(() -> new EntityNotFoundException("User not found"));
-  }
+  User findUserbyUsername(String username);
+
+  User findUserById(Integer id);
+
+  User saveUser(User user);
+
+  boolean existsByUsername(String username);
+
+  List<User> findUsersByBussinesUuid(String bussinesUuid);
+
+  List<User> findAllUsers();
 }

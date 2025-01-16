@@ -8,16 +8,17 @@ import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 
 import com.example.demo.config.Log4j2Config;
-import com.example.demo.dto.*;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.dto.response.RegisterRequest;
+import com.example.demo.dto.response.EmailDetails;
+import com.example.demo.dto.request.RegisterRequest;
 import com.example.demo.entity.Business;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +82,9 @@ public class AuthControllerPublic {
   }
 
 
+  // TODO hacerlo todo en 1 metodo para que si falla el envio de correo no se guarde en la BD
   @PostMapping(value = "register")
+  @Transactional
   public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);

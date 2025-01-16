@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
     return orderResponseMapper.toDto(order);
   }
   public Order getOrderByIdAndBusinessUuid(Long id, String businessUuid) {
-    Business business = bussinesService.getBusinessById(businessUuid);
+    Business business = bussinesService.findBusinessById(businessUuid);
     Optional<Order> order = orderRepository.findByIdAndBusiness(id, business);
     if (order.isEmpty()) {
       throw new EntityNotFoundException("Order not found");
@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
   }
 
   public List<OrderResponse> getOrdersByBusinessUuid(String businessUuid) {
-    Business business = bussinesService.getBusinessById(businessUuid);
+    Business business = bussinesService.findBusinessById(businessUuid);
     List<Order> orders = orderRepository.findAllByBusiness(business);
     if (orders.isEmpty()) {
       throw new EntityNotFoundException("Orders not found");
@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
   @Transactional
   public OrderResponse createOrder(OrderRequest orderRequest) {
     Order order = new Order();
-    Business business = bussinesService.getBusinessById(orderRequest.getBusinessUuid());
+    Business business = bussinesService.findBusinessById(orderRequest.getBusinessUuid());
     order.setBusiness(business);
     order.setOrderNumber(this.calculateNextOrderId(orderRequest.getBusinessUuid()));
     Order resultado = orderRepository.save(order);

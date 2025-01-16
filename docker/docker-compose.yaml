@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+    volumes:
+      - java-db:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - JDBC_URL=jdbc:mysql://db:3306/restaurante
+#      - JDBC_URL=jdbc:mysql://144.xx.xxx.218:3306/restaurante Para conectarse al servidor
+    tty: true
+
+volumes:
+  java-db:

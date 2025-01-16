@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.dto.response.RegisterRequest;
+import com.example.demo.dto.request.RegisterRequest;
 import com.example.demo.entity.AuditoryRevision;
 import com.example.demo.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;

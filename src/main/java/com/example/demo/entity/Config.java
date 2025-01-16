@@ -17,13 +17,15 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="rol")
-public class Rol{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String role;
-    String description;
+@Table(name ="config")
+public class Config {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String name;
+  private String value;
+  private String description;
+
 }
-
-

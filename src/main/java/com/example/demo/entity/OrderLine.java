@@ -56,5 +56,4 @@ public class OrderLine {
   @OneToMany(mappedBy = "orderLine")
   @JsonManagedReference
   private List<OrderLineIngredient> orderLineIngredients;
-
 }

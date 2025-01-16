@@ -1,0 +1,14 @@
+name: Test2
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types:
+      - completed
+
+jobs:
+  test2:
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - run: echo 'The triggering workflow passed 3'

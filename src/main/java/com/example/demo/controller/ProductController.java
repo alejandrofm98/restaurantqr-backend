@@ -1,20 +1,33 @@
 package com.example.demo.controller;
 
+import static com.example.demo.utils.Constants.CONSTANT_DELETE;
+import static com.example.demo.utils.Constants.CONSTANT_POST;
+import static com.example.demo.utils.Constants.CONSTANT_PUT;
+import static com.example.demo.utils.Constants.CONSTANT_ROL_ADMIN;
+import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
+import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
+
 import com.example.demo.config.Log4j2Config;
+import com.example.demo.dto.request.ProductRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.entity.Product;
+import com.example.demo.services.AuxService;
 import com.example.demo.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-
-import static com.example.demo.utils.Constants.*;
 
 
 @RestController
@@ -25,16 +38,14 @@ import static com.example.demo.utils.Constants.*;
 public class ProductController {
 
   private final ProductService productService;
+  private final AuxService auxService;
 
   //Insertar productos + foto
   @PostMapping(value = "products", consumes = {"multipart/form-data"})
   public ResponseEntity<ApiResponse> uploadImage(@RequestParam("image") MultipartFile file,
-      @RequestParam("name") String name, @RequestParam("description") String description,
-      @RequestParam("price") Float price, @RequestParam("category") Integer category,
-      @RequestParam("status") Integer status, @RequestParam("businessUuid") String businessUuid)
+     @RequestPart("product")ProductRequest productRequest)
       throws IOException {
-    Product uploadedProduct = productService.uploadImage(file, name, description, price, category,
-        status, businessUuid);
+    Product uploadedProduct = productService.insertProductWithImage(file, productRequest);
     Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/products",
         "Successfully inserted product",
         uploadedProduct.toString());
@@ -51,16 +62,9 @@ public class ProductController {
   public ResponseEntity<ApiResponse> updateProductWithImage(
       @PathVariable Integer id,
       @RequestParam(value = "image", required = false) MultipartFile file,
-      @RequestParam String name,
-      @RequestParam String description,
-      @RequestParam Float price,
-      @RequestParam Integer category,
-      @RequestParam Integer status,
-      @RequestParam String businessUuid
-  ) {
+      @RequestPart("product") ProductRequest productRequest) {
     try {
-      Product updatedProduct = productService.updateProductWithImage(id, file, name, description,
-          price, category, status, businessUuid);
+      Product updatedProduct = productService.updateProductWithImage(id, file, productRequest);
       Log4j2Config.logRequestInfo(CONSTANT_PUT, CONSTANT_SECURE_URL + "/products/" + id,
           "Successfully updated product",
           updatedProduct.toString()

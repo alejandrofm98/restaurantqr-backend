@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
@@ -58,5 +59,13 @@ public class Order {
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonManagedReference
   private List<OrderLine> orderLines;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name="waiterId", referencedColumnName = "id")
+  private User waiter;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "tableId", referencedColumnName = "id")
+  private Tables table;
 
 }
