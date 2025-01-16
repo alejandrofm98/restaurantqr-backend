@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Version mvn
         run: |
-          echo mvn -v
+          mvn -v
 
       - name: Build and analyze
         env:
