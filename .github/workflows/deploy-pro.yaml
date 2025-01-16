@@ -13,6 +13,13 @@ jobs:
     environment: pro
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Setup Java
+        uses: actions/setup-java@v4.6.0
+        with:
+          java-version: 21
+          distribution: 'corretto'
+          cache: maven
+
       - name: Checkout
         uses: actions/checkout@v4.2.2
 

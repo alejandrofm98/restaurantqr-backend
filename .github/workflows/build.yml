@@ -16,6 +16,9 @@ jobs:
           distribution: 'corretto'
           cache: maven
 
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
       - name: copy application.properties
         run: cp src/main/resources/application-example.properties src/main/resources/application.properties
 
