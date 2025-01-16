@@ -18,6 +18,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +82,9 @@ public class AuthControllerPublic {
   }
 
 
+  // TODO hacerlo todo en 1 metodo para que si falla el envio de correo no se guarde en la BD
   @PostMapping(value = "register")
+  @Transactional
   public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
