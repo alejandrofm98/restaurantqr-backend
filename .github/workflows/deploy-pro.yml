@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    environment: pro
     steps:
       - name: Setup Java
         uses: actions/setup-java@v4.6.0
@@ -92,7 +93,7 @@ jobs:
         run: mvn -e -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=alejandrofm98_restaurantqr-backend_AZRmvOqL3zG8BDeyShQE
 
   deploy-pro:
-    needs: build
+    needs: test
     runs-on: self-hosted
     environment: pro
     steps:
