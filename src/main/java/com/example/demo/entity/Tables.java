@@ -33,9 +33,7 @@ public class Tables {
   private Long id;
 
   @OneToOne(targetEntity = Business.class)
-  @JoinColumn(name = "businessUuid", referencedColumnName = "business_uuid")
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "businessUuid")
-  @JsonIdentityReference(alwaysAsId = true)
+  @JoinColumn(name = "business_uuid", referencedColumnName = "business_uuid")
   private Business business;
 
   private Integer number;

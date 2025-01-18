@@ -45,4 +45,7 @@ public class Constants {
     public static final String LOGS_DESCRIPTION_FINISH = "[/DESCRIPTION]";
     public static final String LOGS_FUNCTION_START = "[FUNCTION]";
     public static final String LOGS_FUNCTION_FINISH = "[/FUNCTION]";
+
+    //ROLES
+    public static final String ROL_OWNER = "OWNER";
 }

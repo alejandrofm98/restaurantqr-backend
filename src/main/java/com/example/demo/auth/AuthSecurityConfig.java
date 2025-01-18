@@ -19,24 +19,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true)
+    securedEnabled = true,
+    jsr250Enabled = true)
 public class AuthSecurityConfig {
 
-    public final JwtAuthenticationFilter jwtAuthenticationFilter;
-    public final AuthenticationProvider authProvider;
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf->
-                        csrf.disable())
-                .authorizeHttpRequests(authRequest ->
-                        authRequest.requestMatchers("/auth/**").permitAll()
-                            .requestMatchers("/docs/**").permitAll()
-                            .requestMatchers("/orde*/**").permitAll()
-                                .anyRequest().authenticated())
-                .sessionManagement(sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
-    }
+  public final JwtAuthenticationFilter jwtAuthenticationFilter;
+  public final AuthenticationProvider authProvider;
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .cors(cors -> cors.disable() )
+        .csrf(csrf ->
+            csrf.disable())
+        .authorizeHttpRequests(authRequest ->
+            authRequest.requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/docs/**").permitAll()
+                .requestMatchers("/orde*/**").permitAll()
+                .anyRequest().authenticated())
+        .sessionManagement(
+            sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authProvider)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+  }
 }

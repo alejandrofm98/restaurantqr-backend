@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +19,12 @@ import org.hibernate.envers.Audited;
 @NoArgsConstructor
 @Entity
 @Table(name ="business")
-public class Business {
+public class Business implements Serializable {
+  @Serial
+  private static final long serialVersionUID = 1L; // Recommended for Serializable classes
 
     @Id
-    @Column(name = "business_uuid", unique = true, nullable = false)
+    @Column(name = "business_uuid" , unique = true, nullable = false)
     String businessUuid;
     String name;
     String address;

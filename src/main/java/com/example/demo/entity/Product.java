@@ -1,8 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +11,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,9 +26,11 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "business"}))
-public class Product {
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "business_uuid"}))
+public class Product implements Serializable {
 
+  @Serial
+  private static final long serialVersionUID = 1L; // Recommended for Serializable classes
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -40,14 +41,10 @@ public class Product {
   private Integer status;
 
   @OneToOne
-  @JoinColumn(name = "businessUuid", referencedColumnName = "business_uuid")
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "businessUuid")
-  @JsonIdentityReference(alwaysAsId = true)
+  @JoinColumn(name = "business_uuid", referencedColumnName = "business_uuid")
   private Business business;
   private String image;
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-  @JsonIdentityReference(alwaysAsId = true)
   private List<Ingredient> ingredients;
 }

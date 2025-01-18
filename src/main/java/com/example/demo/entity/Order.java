@@ -2,10 +2,7 @@ package com.example.demo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +31,7 @@ import org.hibernate.envers.Audited;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"orderNumber", "business"})})
+    @UniqueConstraint(columnNames = {"order_number", "business_uuid"})})
 public class Order {
 
   @Id
@@ -45,9 +42,7 @@ public class Order {
   private Long orderNumber;
 
   @ManyToOne(targetEntity = Business.class)
-  @JoinColumn(name = "businessUuid", referencedColumnName = "business_uuid")
-  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "businessUuid")
-  @JsonIdentityReference(alwaysAsId = true)
+  @JoinColumn(name = "business_uuid", referencedColumnName = "business_uuid")
   private Business business;
 
   @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss", timezone = "Europe/Madrid")
@@ -61,11 +56,11 @@ public class Order {
   private List<OrderLine> orderLines;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name="waiterId", referencedColumnName = "id")
+  @JoinColumn(name="waiter_id", referencedColumnName = "id")
   private User waiter;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "tableId", referencedColumnName = "id")
+  @JoinColumn(name = "table_id", referencedColumnName = "id")
   private Tables table;
 
 }

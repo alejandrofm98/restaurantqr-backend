@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public List<User> findUsersByBussinesUuid (String bussinesUuid) {
-    return userRepository.findByBusinessUuid(bussinesUuid);
+    return userRepository.findByBusiness_BusinessUuid(bussinesUuid);
   }
 
   @Override

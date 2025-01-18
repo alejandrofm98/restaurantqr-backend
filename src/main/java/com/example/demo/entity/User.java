@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,19 +32,33 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Integer id;
-  String name;
-  String lastname;
-  String email;
+  private Integer id;
+
   @Column(nullable = false)
-  String username;
-  String password;
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "rolId", referencedColumnName = "id", nullable = false)
-  transient Rol rol;
-  String businessUuid;
-  Boolean status;
-  String fcmToken;
+  private String name;
+
+  @Column(nullable = false)
+  private String lastname;
+
+  @Column(unique = true, nullable = false)
+  private String email;
+
+  @Column(nullable = false, unique = true)
+  private String username;
+
+  @Column(nullable = false)
+  private String password;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "rol_id", referencedColumnName = "id", nullable = false)
+  private Rol rol;
+
+  @ManyToOne(cascade = CascadeType.ALL, targetEntity = Business.class)
+  @JoinColumn(name = "business_uuid", referencedColumnName = "business_uuid", nullable = false)
+  private Business business;
+
+  private Boolean status;
+  private String fcmToken;
 
 
   @Override

@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +20,9 @@ import org.hibernate.envers.Audited;
 @NoArgsConstructor
 @Entity
 @Table(name ="rol")
-public class Rol{
+public class Rol implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L; // Recommended for Serializable classes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;

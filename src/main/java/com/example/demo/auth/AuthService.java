@@ -1,21 +1,21 @@
 package com.example.demo.auth;
 
-import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.dto.response.BusinessResponse;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.RegisterRequest;
+import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.BusinessResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.mapper.BusinessResponseMapper;
 import com.example.demo.dto.response.mapper.UserResponseMapper;
 import com.example.demo.entity.Business;
+import com.example.demo.entity.Rol;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
-import com.example.demo.repository.BusinessRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.services.BussinesService;
 import com.example.demo.services.RolService;
 import com.example.demo.services.UserService;
+import com.example.demo.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -59,7 +57,7 @@ public class AuthService {
 
     UserResponse response = userResponseMapper.toDto(user);
 
-    Business business = bussinesService.findBusinessById(user.getBusinessUuid());
+    Business business = bussinesService.findBusinessById(user.getBusiness().getBusinessUuid());
 
     String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
 
@@ -80,12 +78,13 @@ public class AuthService {
       throw new Exceptions("The user name is already in use.");
     }
 
+
     if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {
       throw new Exceptions("The business does not exist");
     }
-
-    Integer rol = request.getRol() != null ? request.getRol() : 3;
-    //TO DO: COMPROBAR QUE TENGA PERMISOS PARA PONERLE EL ROL INDICADO COMPROBANDO EL BUSSINESUID DE
+    Rol ownerRol = rolService.findByRolName(Constants.ROL_OWNER);
+    Integer rol = request.getRol() != null ? request.getRol() : ownerRol.getId();
+    //TODO: COMPROBAR QUE TENGA PERMISOS PARA PONERLE EL ROL INDICADO COMPROBANDO EL BUSSINESUID DE
     // LA REQUEST
     User user = User.builder().username(request.getUsername())
         .name(request.getName())
@@ -93,7 +92,7 @@ public class AuthService {
         .email(request.getEmail())
         .username(request.getUsername())
         .rol(rolService.findById(rol))
-        .businessUuid(request.getBusinessUuid())
+        .business(bussinesService.findBusinessById(request.getBusinessUuid()))
         .status(true)
         .password(passwordEncoder.encode(request.getPassword()))
         .fcmToken(request.getFcmToken())
@@ -105,7 +104,7 @@ public class AuthService {
 
     UserResponse response = userResponseMapper.toDto(user);
 
-    Business business = bussinesService.findBusinessById(user.getBusinessUuid());
+    Business business = bussinesService.findBusinessById(user.getBusiness().getBusinessUuid());
 
     String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
 
@@ -134,7 +133,7 @@ public class AuthService {
     if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {
       throw new Exceptions("The business does not exist");
     }
-    user.setBusinessUuid(request.getBusinessUuid());
+    user.setBusiness(bussinesService.findBusinessById(request.getBusinessUuid()));
     userService.saveUser(user);
   }
 
