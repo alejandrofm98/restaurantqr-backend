@@ -9,7 +9,6 @@ import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.RegisterBusinessOwnerRequest;
-import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.EmailDetails;
@@ -18,7 +17,6 @@ import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.ProductService;
-import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -85,40 +83,6 @@ public class AuthControllerPublic {
         .response(products)
         .build();
     return ResponseEntity.ok(apiResponse);
-  }
-
-
-  // TODO REHACER
-  @PostMapping(value = "register")
-  @Transactional
-  public ResponseEntity<ApiResponse> register(@RequestBody UserRequest request) {
-    AuthResponse authResponse;
-    authResponse = authService.register(request);
-
-    String token = authResponse.getToken();
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
-        token,
-        request.toString()
-    );
-
-    // Lee el contenido del archivo HTML
-    try {
-      String htmlContent = new String(
-          Objects.requireNonNull(getClass().getResourceAsStream(EMAIL_REGISTER_TEMPLATE))
-              .readAllBytes());
-      EmailDetails emailDetails = new EmailDetails(request.getEmail(),
-          "Registro realizado correctamente", htmlContent, "");
-      emailService.sendMail(emailDetails);
-
-    } catch (IOException e) {
-      Log4j2Config.logRequestError("Error finding registration template for email");
-    }
-
-    ApiResponse apiResponse = ApiResponse.builder()
-        .response(authResponse)
-        .build();
-    return ResponseEntity.ok(apiResponse);
-
   }
 
   @PostMapping(value = "registerBusinessAndOwner")

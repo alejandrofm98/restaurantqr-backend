@@ -6,16 +6,15 @@ import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.request.mapper.BusinessRequestMapper;
 import com.example.demo.dto.request.mapper.UserRequestMapper;
 import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.dto.response.BusinessResponse;
 import com.example.demo.dto.response.RegisterBusinessOwnerResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.mapper.BusinessResponseMapper;
 import com.example.demo.dto.response.mapper.UserResponseMapper;
 import com.example.demo.entity.Business;
-import com.example.demo.entity.Rol;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
 import com.example.demo.jwt.JwtService;
+import com.example.demo.services.AuxService;
 import com.example.demo.services.BussinesService;
 import com.example.demo.services.RolService;
 import com.example.demo.services.UserService;
@@ -47,8 +46,9 @@ public class AuthService {
   private final BussinesService bussinesService;
   private final BusinessRequestMapper businessRequestMapper;
   private final UserRequestMapper userRequestMapper;
+  private final AuxService auxService;
 
-
+  @Transactional
   public AuthResponse login(LoginRequest request) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -64,62 +64,23 @@ public class AuthService {
 
     UserResponse response = userResponseMapper.toDto(user);
 
-    Business business = bussinesService.findBusinessById(user.getBusiness().getBusinessUuid());
-
-    String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
-
-    BusinessResponse businessResponse = businessResponseMapper.toDto(business);
-    businessResponse.setUpdatedAt(updatedAt);
-
     return AuthResponse.builder()
         .token(token)
         .user(response)
-        .business(businessResponse)
         .build();
   }
 
-
+  @Transactional
   public AuthResponse register(UserRequest request) {
-
+    request.setBusinessUuid(auxService.getBussinesUUid());
     checkForDuplicatesUser(request);
 
-    Rol ownerRol = rolService.findByRolName(Constants.ROL_OWNER);
-    Integer rol = request.getRol() != null ? request.getRol() : ownerRol.getId();
-    //TODO: COMPROBAR QUE TENGA PERMISOS PARA PONERLE EL ROL INDICADO COMPROBANDO EL BUSSINESUID DE
-    // LA REQUEST
-    User user = User.builder().username(request.getUsername())
-        .name(request.getName())
-        .lastname(request.getLastname())
-        .email(request.getEmail())
-        .username(request.getUsername())
-        .rol(rolService.findById(rol))
-        .business(bussinesService.findBusinessById(request.getBusinessUuid()))
-        .status(true)
-        .password(passwordEncoder.encode(request.getPassword()))
-        .fcmToken(request.getFcmToken())
-        .build();
-
-    userService.saveUser(user);
-
-    String token = jwtService.getToken(user);
-
-    UserResponse response = userResponseMapper.toDto(user);
-
-    Business business = bussinesService.findBusinessById(user.getBusiness().getBusinessUuid());
-
-    String updatedAt = business.getUpdatedAt() != null ? business.getUpdatedAt().toString() : null;
-
-    BusinessResponse businessResponse = businessResponseMapper.toDto(business);
-
-    businessResponse.setUpdatedAt(updatedAt);
+    User user = userService.saveUser(userRequestMapper.toEntity(request));
 
     return AuthResponse.builder()
-        .token(token)
-        .user(response)
-        .business(businessResponse)
+        .token(jwtService.getToken(user))
+        .user(userResponseMapper.toDto(user))
         .build();
-
-
   }
 
   @Transactional
@@ -131,8 +92,7 @@ public class AuthService {
     Business business = bussinesService.saveBusiness(
         businessRequestMapper.toEntity(request.getBusinessRequest()));
 
-    Integer ownerRol = rolService.findByRolName(Constants.ROL_OWNER).getId();
-    request.getUserRequest().setRol(ownerRol);
+    request.getUserRequest().setRole(Constants.ROL_OWNER);
     request.getUserRequest().setBusinessUuid(business.getBusinessUuid());
 
     User user = userService.saveUser(userRequestMapper.toEntity(request.getUserRequest()));
@@ -160,7 +120,7 @@ public class AuthService {
     user.setName(request.getName());
     user.setLastname(request.getLastname());
     user.setEmail(request.getEmail());
-    user.setRol(rolService.findById(request.getRol()));
+    user.setRol(rolService.findByRolName(request.getRole()));
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     user.setStatus(request.getStatus());
     if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {

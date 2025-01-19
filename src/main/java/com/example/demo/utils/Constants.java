@@ -14,10 +14,10 @@ public class Constants {
     public static final String CONSTANT_PUBLIC_URL = "/auth";
     public static final String CONSTANT_SECURE_URL = "/api/v1";
 
-    public static final String CONSTANT_ROL_ADMIN = "1";
+    public static final String CONSTANT_ROL_ADMIN = "ADMIN";
     public static final String CONSTANT_ROL_USER = "2";
 
-    public static final String CONSTANT_ROL_OWNER = "3";
+    public static final String CONSTANT_ROL_OWNER = "OWNER";
 
     public static final int CONSTANT_IMAGE_MB = 4;
     public static final long MAX_SIZE_BYTES = CONSTANT_IMAGE_MB * 1024L * 1024L;

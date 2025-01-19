@@ -16,7 +16,7 @@ public class ResponseEntityExceptionHandler {
       WebRequest request) {
     ApiResponse apiResponse = ApiResponse.builder()
         .error(true)
-        .errorDescription("Access denied " + ex.getMessage())
+        .errorDescription("Access denied, expired jwt token " + ex.getMessage())
         .build();
     return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
   }

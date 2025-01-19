@@ -1,19 +1,26 @@
 package com.example.demo.auth;
 
 import static com.example.demo.utils.Constants.CONSTANT_GET;
+import static com.example.demo.utils.Constants.CONSTANT_POST;
 import static com.example.demo.utils.Constants.CONSTANT_PUBLIC_URL;
 import static com.example.demo.utils.Constants.CONSTANT_PUT;
 import static com.example.demo.utils.Constants.CONSTANT_ROL_ADMIN;
 import static com.example.demo.utils.Constants.CONSTANT_ROL_OWNER;
 import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
+import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.EmailDetails;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exceptions;
+import com.example.demo.services.EmailService;
 import com.example.demo.services.UserService;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +41,37 @@ public class AuthControllerPrivate {
 
   private final UserService userService;
   private final AuthService authService;
+  private final EmailService emailService;
 
-  @PostMapping(value = "secure")
-  public String welcome() {
-    return "Welcome from secure endpoint";
+  @PostMapping(value = "register")
+  @PreAuthorize("hasRole('" + CONSTANT_ROL_OWNER + "') or hasRole('" + CONSTANT_ROL_ADMIN + "')")
+  public ResponseEntity<ApiResponse> register(@RequestBody UserRequest request) {
+    AuthResponse authResponse;
+    authResponse = authService.register(request);
+
+    String token = authResponse.getToken();
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/register",
+        token,
+        request.toString()
+    );
+
+    // Lee el contenido del archivo HTML
+    try {
+      String htmlContent = new String(
+          Objects.requireNonNull(getClass().getResourceAsStream(EMAIL_REGISTER_TEMPLATE))
+              .readAllBytes());
+      EmailDetails emailDetails = new EmailDetails(request.getEmail(),
+          "Registro realizado correctamente", htmlContent, "");
+      emailService.sendMail(emailDetails);
+
+    } catch (IOException e) {
+      Log4j2Config.logRequestError("Error finding registration template for email");
+    }
+
+    ApiResponse apiResponse = ApiResponse.builder()
+        .response(authResponse)
+        .build();
+    return ResponseEntity.ok(apiResponse);
 
   }
 

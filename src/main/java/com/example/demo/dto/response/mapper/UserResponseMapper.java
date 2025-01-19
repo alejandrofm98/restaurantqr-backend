@@ -15,16 +15,16 @@ import org.mapstruct.ReportingPolicy;
     UserService.class})
 public interface UserResponseMapper {
 
-  @Mapping(source = "rol", target = "rol.id")
+  @Mapping(source = "role", target = "rol.role")
   @Mapping(source = "businessUuid", target = "business.businessUuid")
   User toEntity(UserResponse userResponse);
 
-  @Mapping(source = "rol.id", target = "rol")
+  @Mapping(source = "rol.role", target = "role")
   @Mapping(source = "business.businessUuid", target = "businessUuid")
   UserResponse toDto(User user);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-  @Mapping(source = "rol", target = "rol.id")
+  @Mapping(source = "role", target = "rol.role")
   @Mapping(source = "businessUuid", target = "business.businessUuid")
   User partialUpdate(UserResponse userResponse, @MappingTarget User user);
 }

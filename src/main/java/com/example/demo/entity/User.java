@@ -58,6 +58,7 @@ public class User implements UserDetails {
   @JoinColumn(name = "business_uuid", referencedColumnName = "business_uuid", nullable = false)
   private Business business;
 
+  @Column(nullable = false)
   private Boolean status;
   private String fcmToken;
 
@@ -69,7 +70,7 @@ public class User implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singletonList(
-        new SimpleGrantedAuthority("ROLE_" + getRol()));
+        new SimpleGrantedAuthority("ROLE_" + getRol().getRole()));
   }
 
   @Override

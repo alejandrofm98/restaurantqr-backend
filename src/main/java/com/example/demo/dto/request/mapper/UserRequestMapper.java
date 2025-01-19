@@ -34,18 +34,18 @@ public abstract class UserRequestMapper {
   }
 
 
-  @Mapping(source = "rol", target = "rol.id")
+  @Mapping(source = "role", target = "rol.role")
   @Mapping(source = "businessUuid", target = "business.businessUuid")
   public User toEntity(UserRequest userRequest) {
     User user = new User();
     BeanUtils.copyProperties(userRequest, user);
-    user.setRol(rolRepository.findById(userRequest.getRol()).orElse(null));
+    user.setRol(rolRepository.findByRole(userRequest.getRole()).orElse(null));
     user.setBusiness(businessRepository.findById(userRequest.getBusinessUuid()).orElse(null));
     user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
     return user;
   }
 
-  @Mapping(source = "rol.id", target = "rol")
+  @Mapping(source = "rol.role", target = "role")
   @Mapping(source = "business.businessUuid", target = "businessUuid")
   public UserRequest toDto(User user) {
     UserRequest userRequest = new UserRequest();

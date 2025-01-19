@@ -15,7 +15,7 @@ public class UserRequest {
     String email;
     String username;
     String password;
-    Integer rol;
+    String role;
     String businessUuid;
     String fcmToken;
     private Boolean status;
