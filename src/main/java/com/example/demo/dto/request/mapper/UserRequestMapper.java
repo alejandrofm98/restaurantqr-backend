@@ -9,12 +9,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper(componentModel = ComponentModel.SPRING)
 public abstract class UserRequestMapper {
 
   protected RolRepository rolRepository;
   protected BusinessRepository businessRepository;
+  protected PasswordEncoder passwordEncoder;
 
   @Autowired
   protected void setRolRepository(RolRepository repository) {
@@ -26,6 +28,11 @@ public abstract class UserRequestMapper {
     this.businessRepository = repository;
   }
 
+  @Autowired
+  protected void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
+  }
+
 
   @Mapping(source = "rol", target = "rol.id")
   @Mapping(source = "businessUuid", target = "business.businessUuid")
@@ -34,6 +41,7 @@ public abstract class UserRequestMapper {
     BeanUtils.copyProperties(userRequest, user);
     user.setRol(rolRepository.findById(userRequest.getRol()).orElse(null));
     user.setBusiness(businessRepository.findById(userRequest.getBusinessUuid()).orElse(null));
+    user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
     return user;
   }
 

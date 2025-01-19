@@ -1,17 +1,14 @@
 package com.example.demo.config;
 
-import static com.example.demo.utils.Constants.*;
+import static com.example.demo.utils.Constants.CLICK_2_EAT;
 
 import com.example.demo.repository.UserRepository;
-import com.google.api.services.storage.Storage.Objects.Copy;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
-import jakarta.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +17,6 @@ import org.springframework.data.envers.repository.config.EnableEnversRepositorie
 import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,7 +25,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.PlatformTransactionManager;
 
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 @EnableEnversRepositories

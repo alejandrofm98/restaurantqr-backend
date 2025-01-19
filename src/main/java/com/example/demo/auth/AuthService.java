@@ -127,6 +127,7 @@ public class AuthService {
       RegisterBusinessOwnerRequest request) {
 
     checkForDuplicatesUser(request.getUserRequest());
+
     Business business = bussinesService.saveBusiness(
         businessRequestMapper.toEntity(request.getBusinessRequest()));
 
