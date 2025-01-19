@@ -53,9 +53,9 @@ public class AuthSecurityConfig {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    config.addAllowedOrigin("*");
-    config.addAllowedHeader("*");
-    config.addAllowedMethod("*");
+    config.setAllowedOrigins(List.of("*"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowedMethods(List.of("*"));
     config.setExposedHeaders(
         List.of("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
     source.registerCorsConfiguration("/**", config);
