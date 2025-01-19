@@ -4,7 +4,7 @@ import static com.example.demo.utils.Constants.*;
 
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.dto.response.OrderRequest;
+import com.example.demo.dto.request.OrderRequest;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.Order;
 import com.example.demo.services.OrderService;

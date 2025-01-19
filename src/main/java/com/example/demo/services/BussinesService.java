@@ -12,4 +12,7 @@ public interface BussinesService {
 
   boolean existsBusinessById(String id);
 
+  Business saveBusiness(Business business);
+
+
 }

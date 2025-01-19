@@ -4,16 +4,16 @@ package com.example.demo.auth;
 import static com.example.demo.utils.Constants.CONSTANT_GET;
 import static com.example.demo.utils.Constants.CONSTANT_POST;
 import static com.example.demo.utils.Constants.CONSTANT_PUBLIC_URL;
-import static com.example.demo.utils.Constants.CONSTANT_SECURE_URL;
 import static com.example.demo.utils.Constants.EMAIL_REGISTER_TEMPLATE;
 
 import com.example.demo.config.Log4j2Config;
 import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.RegisterBusinessOwnerRequest;
+import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.EmailDetails;
-import com.example.demo.dto.request.RegisterRequest;
-import com.example.demo.entity.Business;
+import com.example.demo.dto.response.RegisterBusinessOwnerResponse;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.BusinessRepository;
 import com.example.demo.services.EmailService;
@@ -24,7 +24,12 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(CONSTANT_PUBLIC_URL)
@@ -55,7 +60,7 @@ public class AuthControllerPublic {
 
   }
 
-
+  // TODO MOVER ESTE METODO A 1 URL QUE TENGA SENTIDO PARA QUE ESTEN FUERA DE /AUTH
   @GetMapping("products")
   public ResponseEntity<ApiResponse> getAllProducts() {
     List<Product> products = productService.getAllProducts();
@@ -68,6 +73,7 @@ public class AuthControllerPublic {
     return ResponseEntity.ok(apiResponse);
   }
 
+  // TODO MOVER ESTE METODO A 1 URL QUE TENGA SENTIDO PARA QUE ESTEN FUERA DE /AUTH
 
   @GetMapping("/products/{businessUuid}")
   public ResponseEntity<ApiResponse> getProductsByBusinessUuid(@PathVariable String businessUuid) {
@@ -82,10 +88,10 @@ public class AuthControllerPublic {
   }
 
 
-  // TODO hacerlo todo en 1 metodo para que si falla el envio de correo no se guarde en la BD
+  // TODO REHACER
   @PostMapping(value = "register")
   @Transactional
-  public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<ApiResponse> register(@RequestBody UserRequest request) {
     AuthResponse authResponse;
     authResponse = authService.register(request);
 
@@ -115,20 +121,36 @@ public class AuthControllerPublic {
 
   }
 
+  @PostMapping(value = "registerBusinessAndOwner")
+  public ResponseEntity<ApiResponse> registerBusinessAndOwner(
+      @RequestBody RegisterBusinessOwnerRequest request) {
 
-  //Insert
-  @PostMapping("/business")
-  public ResponseEntity<ApiResponse> createBusiness(@RequestBody Business business) {
-    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_SECURE_URL + "/business",
-        "Successfully inserted business",
-        business.toString());
+    RegisterBusinessOwnerResponse response = authService.registerBusinessAndOwner(request);
 
-    Business businessResult = businessRepository.save(business);
+    String token = response.getToken();
+    Log4j2Config.logRequestInfo(CONSTANT_POST, CONSTANT_PUBLIC_URL + "/registerBusinessAndOwner",
+        token,
+        request.toString()
+    );
+
+    // Lee el contenido del archivo HTML
+    try {
+      String htmlContent = new String(
+          Objects.requireNonNull(getClass().getResourceAsStream(EMAIL_REGISTER_TEMPLATE))
+              .readAllBytes());
+      EmailDetails emailDetails = new EmailDetails(request.getUserRequest().getEmail(),
+          "Registro realizado correctamente", htmlContent, "");
+      emailService.sendMail(emailDetails);
+
+    } catch (IOException e) {
+      Log4j2Config.logRequestError("Error finding registration template for email");
+    }
 
     ApiResponse apiResponse = ApiResponse.builder()
-        .response(businessResult)
+        .response(response)
         .build();
     return ResponseEntity.ok(apiResponse);
+
   }
 
 

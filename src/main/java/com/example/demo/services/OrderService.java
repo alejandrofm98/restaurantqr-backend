@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.dto.response.OrderRequest;
+import com.example.demo.dto.request.OrderRequest;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.entity.Order;
 import java.util.List;

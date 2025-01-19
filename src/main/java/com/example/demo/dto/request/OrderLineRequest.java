@@ -1,6 +1,5 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.request;
 
-import com.example.demo.dto.request.OrderLineIngredientRequest;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

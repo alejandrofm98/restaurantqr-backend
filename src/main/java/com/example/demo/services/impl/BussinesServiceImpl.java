@@ -38,4 +38,9 @@ public class BussinesServiceImpl implements BussinesService {
     return businessRepository.existsById(id);
   }
 
+  @Override
+  public Business saveBusiness(Business business) {
+    return businessRepository.save(business);
+  }
+
 }

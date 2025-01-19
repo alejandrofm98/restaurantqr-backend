@@ -1,6 +1,5 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.request;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequest {
-  String businessUuid;
-  List<OrderLineRequest> orderLines;
+public class RegisterBusinessOwnerRequest {
+    UserRequest userRequest;
+    BusinessRequest businessRequest;
 }

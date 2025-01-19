@@ -1,9 +1,13 @@
 package com.example.demo.auth;
 
 import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.request.RegisterRequest;
+import com.example.demo.dto.request.RegisterBusinessOwnerRequest;
+import com.example.demo.dto.request.UserRequest;
+import com.example.demo.dto.request.mapper.BusinessRequestMapper;
+import com.example.demo.dto.request.mapper.UserRequestMapper;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.BusinessResponse;
+import com.example.demo.dto.response.RegisterBusinessOwnerResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.dto.response.mapper.BusinessResponseMapper;
 import com.example.demo.dto.response.mapper.UserResponseMapper;
@@ -25,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -40,6 +45,8 @@ public class AuthService {
   private final RolService rolService;
   private final UserService userService;
   private final BussinesService bussinesService;
+  private final BusinessRequestMapper businessRequestMapper;
+  private final UserRequestMapper userRequestMapper;
 
 
   public AuthResponse login(LoginRequest request) {
@@ -72,9 +79,9 @@ public class AuthService {
   }
 
 
-  public AuthResponse register(RegisterRequest request) {
+  public AuthResponse register(UserRequest request) {
 
-    checkForDuplicates(request);
+    checkForDuplicatesUser(request);
 
     Rol ownerRol = rolService.findByRolName(Constants.ROL_OWNER);
     Integer rol = request.getRol() != null ? request.getRol() : ownerRol.getId();
@@ -115,7 +122,27 @@ public class AuthService {
 
   }
 
-  private void checkForDuplicates(RegisterRequest request) {
+  @Transactional
+  public RegisterBusinessOwnerResponse registerBusinessAndOwner(
+      RegisterBusinessOwnerRequest request) {
+
+    checkForDuplicatesUser(request.getUserRequest());
+    Business business = bussinesService.saveBusiness(
+        businessRequestMapper.toEntity(request.getBusinessRequest()));
+
+    Integer ownerRol = rolService.findByRolName(Constants.ROL_OWNER).getId();
+    request.getUserRequest().setRol(ownerRol);
+    request.getUserRequest().setBusinessUuid(business.getBusinessUuid());
+
+    User user = userService.saveUser(userRequestMapper.toEntity(request.getUserRequest()));
+    return RegisterBusinessOwnerResponse.builder()
+        .token(jwtService.getToken(user))
+        .user(userResponseMapper.toDto(user))
+        .business(businessResponseMapper.toDto(business))
+        .build();
+  }
+
+  private void checkForDuplicatesUser(UserRequest request) {
     if (userService.existsByUsername(request.getUsername())) {
       throw new Exceptions("The user name is already in use.");
     }
@@ -124,13 +151,10 @@ public class AuthService {
       throw new Exceptions("The email address is already in use.");
     }
 
-    if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {
-      throw new Exceptions("The business does not exist");
-    }
   }
 
 
-  public void updateUser(Integer userId, RegisterRequest request) {
+  public void updateUser(Integer userId, UserRequest request) {
     User user = userService.findUserById(userId);
     user.setName(request.getName());
     user.setLastname(request.getLastname());

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class UserRequest {
     String name;
     String lastname;
     String email;
@@ -17,6 +17,7 @@ public class RegisterRequest {
     String password;
     Integer rol;
     String businessUuid;
-    Boolean status;
     String fcmToken;
+    private Boolean status;
+
 }

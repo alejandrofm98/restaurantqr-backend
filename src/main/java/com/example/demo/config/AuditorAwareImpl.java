@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.dto.request.RegisterRequest;
+import com.example.demo.dto.request.UserRequest;
 import com.example.demo.entity.AuditoryRevision;
 import com.example.demo.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,11 +67,11 @@ public class AuditorAwareImpl implements AuditorAware<AuditoryRevision> {
       if (jwtService.getTokenFromRequest(request) != null) {
         return jwtService.getUsernameFromToken(jwtService.getTokenFromRequest(request));
       }
-      RegisterRequest registerRequest = jacksonObjectMapper.readValue(
+      UserRequest userRequest = jacksonObjectMapper.readValue(
           new String(request.getInputStream().readAllBytes(), request.getCharacterEncoding()),
-          RegisterRequest.class);
-      if (registerRequest.getUsername() != null) {
-        return registerRequest.getUsername();
+          UserRequest.class);
+      if (userRequest.getUsername() != null) {
+        return userRequest.getUsername();
       }
     } catch (Exception e) {
       return "";
