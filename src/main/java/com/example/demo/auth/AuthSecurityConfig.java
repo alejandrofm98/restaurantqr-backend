@@ -33,7 +33,6 @@ public class AuthSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-        .cors(c -> c.configurationSource(corsFilter()))
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authRequest ->
             authRequest
@@ -45,6 +44,7 @@ public class AuthSecurityConfig {
             sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authProvider)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .cors(c -> c.configurationSource(corsFilter()))
         .build();
   }
 
