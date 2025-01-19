@@ -2,6 +2,7 @@ package com.example.demo.auth;
 
 
 import com.example.demo.jwt.JwtAuthenticationFilter;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ public class AuthSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(c -> c.configurationSource(corsFilter()))
         .authorizeHttpRequests(authRequest ->
             authRequest
                 .requestMatchers("/auth/**").permitAll()
@@ -44,7 +46,6 @@ public class AuthSecurityConfig {
             sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authProvider)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .cors(c -> c.configurationSource(corsFilter()))
         .build();
   }
 
@@ -55,9 +56,9 @@ public class AuthSecurityConfig {
     config.setAllowCredentials(true);
     config.setAllowedOrigins(List.of("*"));
     config.setAllowedHeaders(List.of("*"));
-    config.setAllowedMethods(List.of("*"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed methods
     config.setExposedHeaders(
-        List.of("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+        Arrays.asList("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
     source.registerCorsConfiguration("/**", config);
     return source;
   }
