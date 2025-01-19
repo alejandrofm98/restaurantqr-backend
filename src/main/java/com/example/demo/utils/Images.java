@@ -1,6 +1,6 @@
 package com.example.demo.utils;
 
-import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
+import static com.example.demo.utils.Constants.MAX_SIZE_BYTES;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,8 +47,7 @@ public class Images {
   }
 
   private void checkFileSize() {
-    long maxSizeBytes = CONSTANT_IMAGE_MB * 1024 * 1024;
-    if (file.getSize() > maxSizeBytes) {
+    if (file.getSize() > MAX_SIZE_BYTES) {
       throw new IllegalArgumentException("The file size exceeds the maximum allowed size of 4 MB.");
     }
   }

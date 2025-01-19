@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
   }
 
-  public List<User> findUsersByBussinesUuid (String bussinesUuid) {
+  public List<User> findUsersByBussinesUuid(String bussinesUuid) {
     return userRepository.findByBusiness_BusinessUuid(bussinesUuid);
   }
 
@@ -40,5 +40,9 @@ public class UserServiceImpl implements UserService {
 
   public boolean existsByUsername(String username) {
     return userRepository.existsByUsername(username);
+  }
+
+  public boolean existsByEmail(String email) {
+    return userRepository.existsByEmail(email);
   }
 }

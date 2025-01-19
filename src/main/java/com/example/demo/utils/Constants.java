@@ -19,7 +19,9 @@ public class Constants {
 
     public static final String CONSTANT_ROL_OWNER = "3";
 
-    public static final Integer CONSTANT_IMAGE_MB = 4;
+    public static final int CONSTANT_IMAGE_MB = 4;
+    public static final long MAX_SIZE_BYTES = CONSTANT_IMAGE_MB * 1024L * 1024L;
+    public static final String PATH_DELIMITER = "/";
 
     public static final String EMAIL_REGISTER_TEMPLATE = "/templates/emailRegister.html";
     public static final String CLICK_2_EAT = "click2eat";
@@ -48,4 +50,5 @@ public class Constants {
 
     //ROLES
     public static final String ROL_OWNER = "OWNER";
+
 }

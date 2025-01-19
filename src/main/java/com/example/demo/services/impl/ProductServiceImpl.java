@@ -1,6 +1,7 @@
 package com.example.demo.services.impl;
 
-import static com.example.demo.utils.Constants.CONSTANT_IMAGE_MB;
+import static com.example.demo.utils.Constants.MAX_SIZE_BYTES;
+import static com.example.demo.utils.Constants.PATH_DELIMITER;
 
 import com.example.demo.dto.request.ProductRequest;
 import com.example.demo.dto.request.mapper.ProductRequestMapper;
@@ -63,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
   private static void writeImage(MultipartFile file, Product product, String newFileName)
       throws IOException {
     String directory = "images/" + product.getBusiness().getBusinessUuid();
-    Path imagePath = Paths.get(directory + "/" + newFileName); // Ruta de la imagen
+    Path imagePath = Paths.get(directory + PATH_DELIMITER + newFileName); // Ruta de la imagen
 
     // Verificar si la carpeta existe, si no, crearla
     Path directoryPath = Paths.get(directory);
@@ -82,11 +83,10 @@ public class ProductServiceImpl implements ProductService {
   }
 
   private static void checkImageSize(MultipartFile file, String operation) {
-    long maxSizeBytes = CONSTANT_IMAGE_MB * 1024 * 1024; // 4 MB en bytes
     if (file == null || file.isEmpty() && operation.equals(INSERT)) {
       throw new IllegalArgumentException("The file cannot be empty.");
     }
-    if (file.getSize() > maxSizeBytes) {
+    if (file.getSize() > MAX_SIZE_BYTES) {
       throw new IllegalArgumentException("The file size exceeds the maximum allowed size of 4 MB.");
     }
   }
@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
 
     if (!oldImage.equals(newFileName) && file != null && !file.isEmpty()) {
       Path oldPath = Paths.get(oldImage);
-      Path newPath = Paths.get("images" + "/" + newFileName);
+      Path newPath = Paths.get("images" + PATH_DELIMITER + newFileName);
       try {
         Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
         product.setImage(newPath.toString());

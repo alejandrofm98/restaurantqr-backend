@@ -74,14 +74,8 @@ public class AuthService {
 
   public AuthResponse register(RegisterRequest request) {
 
-    if (userService.existsByUsername(request.getUsername())) {
-      throw new Exceptions("The user name is already in use.");
-    }
+    checkForDuplicates(request);
 
-
-    if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {
-      throw new Exceptions("The business does not exist");
-    }
     Rol ownerRol = rolService.findByRolName(Constants.ROL_OWNER);
     Integer rol = request.getRol() != null ? request.getRol() : ownerRol.getId();
     //TODO: COMPROBAR QUE TENGA PERMISOS PARA PONERLE EL ROL INDICADO COMPROBANDO EL BUSSINESUID DE
@@ -119,6 +113,20 @@ public class AuthService {
         .build();
 
 
+  }
+
+  private void checkForDuplicates(RegisterRequest request) {
+    if (userService.existsByUsername(request.getUsername())) {
+      throw new Exceptions("The user name is already in use.");
+    }
+
+    if (userService.existsByEmail(request.getEmail())) {
+      throw new Exceptions("The email address is already in use.");
+    }
+
+    if (!bussinesService.existsBusinessById(request.getBusinessUuid())) {
+      throw new Exceptions("The business does not exist");
+    }
   }
 
 

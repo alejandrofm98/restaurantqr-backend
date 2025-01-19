@@ -36,7 +36,8 @@ jobs:
               "spring.datasource.password": "${{ secrets.DATASOURCE_PASSWORD }}",
               "spring.mail.username": "${{ secrets.MAIL_USERNAME }}",
               "spring.mail.password": "${{ secrets.MAIL_PASSWORD }}",
-              "spring.datasource.url.docker": "${{ secrets.DATASOURCE_URL_DOCKER }}"
+              "spring.datasource.url.docker": "${{ secrets.DATASOURCE_URL_DOCKER }}",
+              "jwt.secret_key": "${{ secrets.JWT_SECRET_KEY }}"
             }
 
       - name: Activate spring boot profile
