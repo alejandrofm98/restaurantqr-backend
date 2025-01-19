@@ -53,12 +53,8 @@ public class AuthSecurityConfig {
   public CorsConfigurationSource corsFilter() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true);
     config.setAllowedOrigins(List.of("*"));
-    config.setAllowedHeaders(List.of("*"));
     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed methods
-    config.setExposedHeaders(
-        Arrays.asList("Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
     source.registerCorsConfiguration("/**", config);
     return source;
   }
