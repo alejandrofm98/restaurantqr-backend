@@ -1,9 +1,9 @@
 package com.example.demo.features.user;
 
+import com.example.demo.common.jwt.AuxService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +13,10 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserRequestMapper userRequestMapper;
-  private final PasswordEncoder passwordEncoder;
+  private final AuxService auxService;
 
+  //Llevar cuidado con estos dos metodos porque no usan el bussinesuid y por lo tanto los usuarios
+  // normales no de ben usarlos.
   public User findUserbyUsername(String username) {
     return userRepository.findByUsername(username)
         .orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
@@ -25,16 +27,17 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
   }
 
-  public List<User> findUsersByBussinesUuid(String bussinesUuid) {
-    return userRepository.findByBusiness_BusinessUuid(bussinesUuid);
+  public User findUserByIdAndBussinessUuid(Integer id) {
+    return userRepository.findByIdAndBusiness_BusinessUuid(id, auxService.getBussinesUUid())
+        .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
   }
+
 
   @Override
   public List<User> findAllUsers() {
-    return userRepository.findAll();
+    return userRepository.findByBusiness_BusinessUuid(auxService.getBussinesUUid());
   }
 
-  @Override
   public User saveUser(User user) {
     return userRepository.save(user);
   }

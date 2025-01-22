@@ -12,7 +12,6 @@ import com.example.demo.common.dto.ApiResponse;
 import com.example.demo.common.exception.Exceptions;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +29,16 @@ public class UserController {
 
   private final UserService userService;
 
+  @GetMapping("user/{id}")
+  public ResponseEntity<ApiResponse> getUser(@PathVariable Integer id) {
+    try {
+      userService.findUserByIdAndBussinessUuid(id);
+    }catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponse.builder().build());
+    }
+    return null;
+  }
+
   @GetMapping("users")
   public ResponseEntity<ApiResponse> findAllUsers() {
     try {
@@ -46,36 +55,6 @@ public class UserController {
       return ResponseEntity.badRequest().body(ApiResponse.builder().build());
     }
   }
-
-  @GetMapping("/users/{businessUuid}")
-  public ResponseEntity<ApiResponse> getUsersByBusinessUuid(@PathVariable String businessUuid) {
-    try {
-      List<User> users = userService.findUsersByBussinesUuid(businessUuid);
-      Log4j2Config.logRequestInfo(CONSTANT_GET, CONSTANT_PUBLIC_URL + "/users/" + businessUuid,
-          "Users for business displayed correctly",
-          users.toString());
-
-      if (users.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ApiResponse.builder()
-                .error(true)
-                .errorDescription("No users found for the given business UUID")
-                .build());
-      }
-
-      ApiResponse apiResponse = ApiResponse.builder()
-          .response(users)
-          .build();
-      return ResponseEntity.ok(apiResponse);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(ApiResponse.builder()
-              .error(true)
-              .errorDescription("An error occurred while fetching users")
-              .build());
-    }
-  }
-
 
   @PutMapping("user/{id}")
   public ResponseEntity<ApiResponse> updateUser(@PathVariable Integer id,
