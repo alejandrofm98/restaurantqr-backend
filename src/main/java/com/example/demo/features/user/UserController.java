@@ -32,11 +32,14 @@ public class UserController {
   @GetMapping("user/{id}")
   public ResponseEntity<ApiResponse> getUser(@PathVariable Integer id) {
     try {
-      userService.findUserByIdAndBussinessUuid(id);
-    }catch (Exception e) {
+      User user = userService.findUserById(id);
+      ApiResponse apiResponse = ApiResponse.builder()
+          .response(user)
+          .build();
+      return ResponseEntity.ok(apiResponse);
+    } catch (Exception e) {
       return ResponseEntity.badRequest().body(ApiResponse.builder().build());
     }
-    return null;
   }
 
   @GetMapping("users")

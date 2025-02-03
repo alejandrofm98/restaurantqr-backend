@@ -23,15 +23,10 @@ public class UserServiceImpl implements UserService {
   }
 
   public User findUserById(Integer id) {
-    return userRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
-  }
-
-  public User findUserByIdAndBussinessUuid(Integer id) {
     return userRepository.findByIdAndBusiness_BusinessUuid(id, auxService.getBussinesUUid())
-        .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException(
+            "User not found by id: " + id + " and business uuid: " + auxService.getBussinesUUid()));
   }
-
 
   @Override
   public List<User> findAllUsers() {
